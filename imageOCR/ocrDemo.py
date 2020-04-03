@@ -33,11 +33,13 @@ def do_ocr_file(file_path):
 
 # 插入数据库记录
 def insert_description(item_id, name, description):
-    db = dbManager.DbManager()
-    sql = "INSERT INTO basic_info(id,name,geng) VALUES (%s,%s,%s)"
-    params = (item_id, name, description)
+    # db = dbManager.DbManager()
+    db = dbManager.DbManager('129.211.91.153', 3306, 'admin', 'abcd', 'isrbqb')
+    # sql = "INSERT INTO basic_info(id,name,geng) VALUES (%s,%s,%s)"
+    sql = "INSERT INTO new_info(name,geng) VALUES (%s,%s)"
+    params = (name, description)
     db.edit(sql, params)
-    print("插入成功")
+    print("第" + str(item_id) + "次成功入库，图片名为" + name)
 
 
 # 文件夹批量识别
@@ -54,7 +56,7 @@ def do_ocr_dir(dir_path):
 
 # 查找漏网之鱼
 def seek_left(dir_path):
-    i = 6434
+    i = 0
     for file_name in os.listdir(dir_path):
         sql = "SELECT COUNT(*) FROM basic_info WHERE name = %s"
         db = dbManager.DbManager()
@@ -90,7 +92,7 @@ if __name__ == "__main__":
     dirPath = '/Users/leverest/Documents/02_ProgramProject/08_Projects' \
               '/ISRproject/bqbSource_4000'
     # 对文件夹中所有的图片进行标记
-    # do_ocr_dir(dirPath)
+    do_ocr_dir(dirPath)
     # 查找上一次漏标记的
     # seek_left(dirPath)
-    change_name(dirPath)
+    # change_name(dirPath)

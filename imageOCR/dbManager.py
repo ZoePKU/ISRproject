@@ -91,5 +91,5 @@ class DbManager:
             return False
         self.conn.commit()
         self.close()
-        print("操作成功" + str(res))
+        print("增删改操作成功, 影响行数为" + str(res))
         return res
