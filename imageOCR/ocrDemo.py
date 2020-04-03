@@ -44,7 +44,7 @@ def insert_description(item_id, name, description):
 def do_ocr_dir(dir_path):
     i = 0
     for file_path in os.listdir(dir_path):
-        response = do_ocr_file(dir_path + file_path)
+        response = do_ocr_file(dir_path + os.sep + file_path)
         if response:
             i += 1
             res = response.json()
@@ -55,24 +55,42 @@ def do_ocr_dir(dir_path):
 # 查找漏网之鱼
 def seek_left(dir_path):
     i = 6434
-    for file_path in os.listdir(dir_path):
+    for file_name in os.listdir(dir_path):
         sql = "SELECT COUNT(*) FROM basic_info WHERE name = %s"
         db = dbManager.DbManager()
-        if db.fetchone(sql, file_path)[0] == 0:
-            print(file_path + "还不存在！")
-            response = do_ocr_file(dir_path + file_path)
+        if db.fetchone(sql, file_name)[0] == 0:
+            print(file_name + "还不存在！")
+            response = do_ocr_file(dir_path + os.sep + file_name)
             if response:
                 i += 1
                 res = response.json()
-                insert_description(i, file_path,
+                insert_description(i, file_name,
                                    words_together(res['words_result']))
+
+
+# 修改单个文件名
+def add_zero(file_name):
+    pos = file_name.index('.')
+    return file_name[:pos].rjust(4, '0') + file_name[pos:]
+
+
+# 批量修改文件名
+def change_name(dir_path):
+    for file_name in os.listdir(dir_path):
+        old_name = dir_path + os.sep + file_name
+        new_name = dir_path + os.sep + add_zero(file_name)
+        # print(old_name + "====>" + new_name)
+        os.rename(old_name, new_name)
 
 
 if __name__ == "__main__":
     # 存放图片的文件夹路径
+    # dirPath = '/Users/leverest/Documents/02_ProgramProject/08_Projects' \
+    #           '/ISRproject/bqbSource'
     dirPath = '/Users/leverest/Documents/02_ProgramProject/08_Projects' \
-              '/ISRproject/bqbSource/'
+              '/ISRproject/bqbSource_4000'
     # 对文件夹中所有的图片进行标记
     # do_ocr_dir(dirPath)
     # 查找上一次漏标记的
-    seek_left(dirPath)
+    # seek_left(dirPath)
+    change_name(dirPath)
