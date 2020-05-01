@@ -85,6 +85,7 @@ def change_name(dir_path):
         os.rename(old_name, new_name)
 
 
+"""
 if __name__ == "__main__":
     # 存放图片的文件夹路径
     # dirPath = '/Users/leverest/Documents/02_ProgramProject/08_Projects' \
@@ -96,3 +97,4 @@ if __name__ == "__main__":
     # 查找上一次漏标记的
     # seek_left(dirPath)
     # change_name(dirPath)
+"""
