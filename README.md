@@ -79,9 +79,9 @@ form['query'] `是前端的请求参数中的检索式，前端请求结构大�
 
 ```json
 {
-  "queryMode": "", // 检索模式。（如果需要的话）
-  "query": "",
-  "picContent": "" // base64
+    "queryMode":"",
+    "query":"",
+    "picContent":""
 }
 ```
 
@@ -89,18 +89,22 @@ form['query'] `是前端的请求参数中的检索式，前端请求结构大�
 
 ```json
 {
-  "message": "seccess", // or fail
-  "imageData": [
-    {
-  		"picId": "",
-  		"picName": "",
-      "picType": "",
-    	"picRole": [],
-      "picStyle": [],
-      "picDescription": "",
-      "rankValue": 10
-    }
-	]
+    "message":"seccess",
+    "imageData":[
+        {
+            "picId":"",
+            "picName":"",
+            "picType":"",
+            "picRole":[
+
+            ],
+            "picStyle":[
+
+            ],
+            "picDescription":"",
+            "rankValue":10
+        }
+    ]
 }
 ```
 
