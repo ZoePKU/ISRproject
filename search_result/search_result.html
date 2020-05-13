@@ -22,19 +22,19 @@
         </div>
         <div class="select_area">
             <div class="line">
-                <b>角色</b><a href="javascript:;" class="active">全部</a><a href="javascript:;" class="">全部</a><a href="javascript:;" class="">全部</a><a href="javascript:;" class="">全部</a><a href="javascript:;" class="">全部</a><a href="javascript:;" class="">全部</a><a href="javascript:;" class="">全部</a><a href="javascript:;" class="">全部</a><a href="#"><b>更多>></b></a>
+                <b>角色</b><a class="active" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a href="#" class="more"><b>更多>></b></a>
                 <HR align=center width=860px color=#797979 SIZE=1 style="margin-top: 30px">
             </div>
             <div class="line">
-                <b>情绪</b><a class="active">全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a href="#"><b>更多>></b></a>
+                <b>情绪</b><a class="active" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a href="#" class="more"><b>更多>></b></a>
                 <HR align=center width=860px color=#797979 SIZE=1 style="margin-top: 30px">
             </div>
              <div class="line">
-                <b>情境</b><a class="active">全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a href="#"><b>更多>></b></a>
+                <b>情境</b><a class="active" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a href="#" class="more"><b>更多>></b></a>
                 <HR align=center width=860px color=#797979 SIZE=1 style="margin-top: 30px">
             </div>
             <div class="line">
-                <b>风格</b><a class="active">全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a>全部</a><a href="#"><b>更多>></b></a>
+                <b>风格</b><a class="active" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a href="#" class="more"><b>更多>></b></a>
             </div>
         </div>
         <div class="reminder">以下为“<a>xxx</a>”的检索结果，共<a>x</a>条：</div>
@@ -48,7 +48,7 @@
                <img src="images/place.png" style="margin-left: 20px"><img src="images/place.png"><img src="images/place.png"><img src="images/place.png">
                 <img src="images/place.png" style="margin-left: 20px"><img src="images/place.png"><img src="images/place.png"><img src="images/place.png">
         </div>
-        <div class="page_area"><div class="page_number"><</div><div class="page_select">1</div><div class="page_number">2</div><div class="page_number">3</div><div class="page_number">4</div><div class="page_number">5</div><div class="page_number">6</div><div class="page_number">></div></div>
+        <div class="page_area"><span class="page_button"><</span><span class="page_select" id="1">1</span><span class="page_number" id="2">2</span><span class="page_number" id="3">3</span><span class="page_number" id="4">4</span><span class="page_number" id="5">5</span><span class="page_number" id="6">6</span><span class="page_button">></span></div>
 </div>
     <div style="font-size: 13px;line-height: 2em;margin-bottom: 30px">
         © Copyright ISR BQB ®<br>
@@ -56,34 +56,40 @@
     </div>
  </center>
  <script type="text/javascript">
-//左边按钮的点击事件
+//按钮的点击事件
     window.onload = function(){
+        //分类切换
         var arr = document.getElementsByTagName('a');
         for(var i = 0;i<arr.length;i++){
             arr[i].onclick = function(){    
                 //this是当前激活的按钮，在这里可以写对应的操作  
                 if(this.className == ''){
                     this.className = 'active';
-                    var name = this.id;
-                    var btn = document.getElementsByClassName('active');
-                    for(var j=0;j<btn.length;j++){
-                        if(btn[j].id!=name){
-                            btn[j].className = '';
-                        }
-                    }   
                 }
-                else {
+                else if(this.className == 'active'){
                     this.className = '';
+                }  
+                }
+             } 
+
+        //页码切换
+        var arr1 = document.getElementsByTagName('span');
+        for(var m = 0;m<arr1.length;m++){
+            arr1[m].onclick = function(){    
+                //this是当前激活的按钮，在这里可以写对应的操作  
+                if(this.className == 'page_number'){
+                    this.className = 'page_select';
                     var name = this.id;
-                    var btn = document.getElementsByClassName('actives');
-                    for(var j=0;j<btn.length;j++){
-                        if(btn[j].id!=name){
-                            btn[j].className = '';
+                    var btn = document.getElementsByClassName('page_select');
+                    for(var n=0;n<btn.length;n++){
+                        if(btn[n].id!=name){
+                            btn[n].className = 'page_number';
                         }
                     }   
                 }
              } 
          }
+        
      }
 </script>
 </body>
