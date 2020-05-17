@@ -152,7 +152,11 @@ button:focus{
 {
 	width:180px;
 	height: 168px;
-	margin-left: 50px;
+	/*
+	我不知道为什么下面设成50第四个图就被挤出去了
+	用了flask就有这个问题，不用就没有
+	 */
+	margin-left: 48px;
 	margin-top: 40px;
 }
 
