@@ -9,9 +9,10 @@
 ### 上次工作总结
 
 - 停用词表和w2v模型已经找到（李总说看起来效果挺好的，但还没有用）
-- 切词效果大家觉得如何，另外切词结果要不要存数据呢
+- 切词效果大家觉得如何
 - 万恶的CNN在李总呕心沥血配置tensorflow失败之后使用tourch配置成功，已经可以运行
-- 数据库还没有确定，有点拿不准，群里有空了讨论一下吧。
+- 数据库还没有确定，有点拿不准，群里有空了讨论一下吧
+- flask框架基本搭好，数据库部分还没定下来
 
 
 
@@ -42,6 +43,8 @@ $ venv\Scripts\activate
 # 激活成功后你的命令行会变成
 (venv) $ xxxxx
 
+# =============下面配环境
+
 # 安装所有依赖库（有虚拟环境后macOS同学可以不用写pip3了）
 (venv) $ pip install -r requirements.txt
 # 这里花时间可能会很长，建议翻墙（pytorch模块不翻墙很可能装不上）
@@ -61,6 +64,8 @@ $ venv\Scripts\activate
 # 浏览器输入 http://127.0.0.1:8080 就可以访问项目了
 ```
 
+另外，CNN的模型比较大，不放git了，[在这个链接](https://lanzous.com/icpnpsd)下载后解压，把`net_best.pth`放入`app/main/cnn/models/`这个文件夹。
+
 
 
 #### 前端同学
@@ -68,9 +73,47 @@ $ venv\Scripts\activate
 前端同学需要开始使用jinja模板进行开发，强烈建议前端同学使用pycharm，他有对jinja模板的支持（自动补全），sublime text等我不确定有没有。
 
 - jinja金笑缘已经改了一部分，有空的时候金笑缘直接电话跟前端同学沟通一下大概的使用方式。
-- 
 
+- 接口格式如下：==你们觉得还需要加一些内容吗（比如情境什么的）==
 
+  ```python
+  success=True
+  length=3
+  data=[
+    {
+    'name': '0001.jpg',
+    'src_path': 'static/bqbSource/0001.jpg',
+    'score': 78.8,
+    'description': 'it is a description'
+    },
+    {
+    'name': '0002.jpg',
+    'src_path': 'static/bqbSource/0002.jpg',
+    'score': 71.2,
+    'description': 'it is a description'
+    },
+  ]
+  ```
+
+- 前端需要完善的功能
+
+  - 分页
+  - 选择器
+  - 图片上传
+  - 图片上传完成后也要在页面展示
+  - 尺寸的适配
+  - 更多的展开
+
+#### 后端
+
+==先讨论下数据库的结构吧。==
+
+具体要做的就是
+
+- 切词
+- 同义词、停用词控制（已经有词表了）
+- 近义词控制（word2vector）
+- 倒排档的制作（真的用tfidf吗）
 
 ------
 
