@@ -11,12 +11,16 @@
 <body>
 <center>
     <div class="content">
+
+        {#LOGO#}
         <div class="logo">
             <a href="#"><img src="../static/search_result/images/title.png"
                              style="width: 259px;height: 40px"></a>
             <img src="../static/search_result/images/logo.gif"
                  style="width: 31px;height: 35px;margin-left: 10px">
         </div>
+
+        {#搜索栏#}
         <div class="search_bar">
             <img src="../static/search_result/images/search_icon.png" class="search_icon">
             <img src="../static/search_result/images/image_icon.png" class="image_icon">
@@ -24,6 +28,8 @@
             <button class="button" type="submit">搜索</button>
             <a href="#"><u>首页</u></a>
         </div>
+
+        {#筛选区域#}
         <div class="select_area">
             {% for cata_name in ['角色','情绪','情境','风格'] %}
                 <div class="line">
@@ -35,16 +41,26 @@
                 </div>
             {% endfor %}
         </div>
+
+        {#结果提示#}
         <div class="reminder">以下为“<a>xxx</a>”的检索结果，共<a>x</a>条：</div>
         <div class="result_header">
             <a><&nbsp;1/20&nbsp;></a>
         </div>
+
+        {#图片结果#}
         <div class="result_area">
-            {#下面写在一行是为了防止换行产生空白符#}
-            {%- for i in range(20) %}{% if i%4==0 -%}
-                <img src="../static/search_result/images/place.png" style="margin-left: 20px">{% else -%}
-                <img src="../static/search_result/images/place.png">{% endif %}{% endfor -%}
+            {#减号是为了防止换行产生空白符#}
+            {%- for i in range(20) -%}
+                {%- if i%4==0 -%}
+                    <img src="../static/search_result/images/place.png" style="margin-left: 20px">
+                {%- else -%}
+                    <img src="../static/search_result/images/place.png">
+                {%- endif -%}
+            {%- endfor -%}
         </div>
+
+        {#页面选择按钮   下一句 初始化一个当前页码#}
         {% set select_num = 2 %}
         <div class="page_area">
             <span class="page_button"><</span>
@@ -55,6 +71,8 @@
             <span class="page_button">></span>
         </div>
     </div>
+
+    {#尾部#}
     <div style="font-size: 13px;line-height: 2em;margin-bottom: 30px">
         © Copyright ISR BQB ®<br>
         Please contact us through zdq
