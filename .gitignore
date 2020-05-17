@@ -4,6 +4,7 @@
 
 # jetbrains file
 */.idea
+.idea
 
 ###### Python Files #########
 # Byte-compiled / optimized / DLL files
