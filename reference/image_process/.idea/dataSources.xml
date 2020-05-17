@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="isrbqb@localhost" uuid="e1abe9d6-a207-4e3d-aa45-8b7810e954a7">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/isrbqb</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="isrbqb@129.211.91.153" uuid="b16070ee-75e8-4af4-9513-c7ce579e1dbd">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://129.211.91.153:3306/isrbqb</jdbc-url>
+    </data-source>
+  </component>
+</project>
