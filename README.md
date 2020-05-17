@@ -2,7 +2,79 @@
 
 信息存储与检索课程 检索项目实验
 
-### 2020-0508 分工
+
+
+## 2020-0517
+
+### 上次工作总结
+
+- 停用词表和w2v模型已经找到（李总说看起来效果挺好的，但还没有用）
+- 切词效果大家觉得如何，另外切词结果要不要存数据呢
+- 万恶的CNN在李总呕心沥血配置tensorflow失败之后使用tourch配置成功，已经可以运行
+- 数据库还没有确定，有点拿不准，群里有空了讨论一下吧。
+
+
+
+### 接下来的工作
+
+首先说一下大家如果要在自己的电脑上运行项目的话需要做什么
+
+建立虚拟环境（不用虚拟环境很容易导致包出错）
+
+```bash
+# 以下是命令行操作，命令为美元符$后面的语句
+# 井号是注释，macOS同学一定要注意python2和python3的问题，一般来说所有pip都应该改成pip3
+
+# 安装 virtualenv 库（虚拟环境），如果你没有安装过的话
+$ pip install virtualenv
+
+# 切换到我们的项目地址
+$ cd xxxxxx/ISRproject
+
+# 建立虚拟环境
+$ virtualenv venv
+
+# 激活虚拟环境 macOS
+$ source venv/bin/activate
+# 激活虚拟环境 windows
+$ venv\Scripts\activate
+
+# 激活成功后你的命令行会变成
+(venv) $ xxxxx
+
+# 安装所有依赖库（有虚拟环境后macOS同学可以不用写pip3了）
+(venv) $ pip install -r requirements.txt
+# 这里花时间可能会很长，建议翻墙（pytorch模块不翻墙很可能装不上）
+
+# 安装完之后就可以启动项目了（现在项目很不完整，没啥好看的，主要是给前端同学用来调试）
+(venv) $ python app/app.py
+# 命令行会输出类似下面的命令
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 311-217-084
+# 浏览器输入 http://127.0.0.1:8080 就可以访问项目了
+```
+
+
+
+#### 前端同学
+
+前端同学需要开始使用jinja模板进行开发，强烈建议前端同学使用pycharm，他有对jinja模板的支持（自动补全），sublime text等我不确定有没有。
+
+- jinja金笑缘已经改了一部分，有空的时候金笑缘直接电话跟前端同学沟通一下大概的使用方式。
+- 
+
+
+
+------
+
+## 2020-0508 分工
 
 #### 董：找停用词表，找word2vector模型
 
@@ -113,7 +185,7 @@ app = Flask(__name__)
 def query():
   query_str = request.form['query'] # 前端页面发送post请求时会带有一些参数
   query_mode = request.form['queryMode']
-	return render_template('result.html', message='success', imageData=getResult(query)) # return就是请求返回的返回
+  return render_template('result.html', message='success', imageData=getResult(query)) # return就是请求返回的返回
 ```
 
 ##### 接口数据格式（暂定）

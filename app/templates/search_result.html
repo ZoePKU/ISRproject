@@ -51,11 +51,11 @@
         {#图片结果#}
         <div class="result_area">
             {#减号是为了防止换行产生空白符#}
-            {%- for i in range(20) -%}
+            {%- for i in range(length) -%}
                 {%- if i%4==0 -%}
-                    <img src="../static/search_result/images/place.png" style="margin-left: 20px">
+                    <img src="{{data[i]['src_path']}}" style="margin-left: 20px">
                 {%- else -%}
-                    <img src="../static/search_result/images/place.png">
+                    <img src="{{data[i]['src_path']}}">
                 {%- endif -%}
             {%- endfor -%}
         </div>
