@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html" charset="UTF-8">
+    <title>检索结果</title>
+    <link rel="icon" href="images/logo.gif" type="image/x-icon"/>
+    <link  href="css/search_result.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+    <center>
+    <div class="content">
+        <div class="logo">
+            <a href="#"><img src="images/title.png" style="width: 259px;height: 40px"></a>
+            <img src="images/logo.gif" style="width: 31px;height: 35px;margin-left: 10px">
+        </div>
+        <div class="search_bar">
+            <img src="images/search_icon.png" class="search_icon">
+            <img src="images/image_icon.png" class="image_icon">
+            <input type="text" class="input" placeholder="熊猫头"/>
+            <button class="button" type="submit">搜索</button>
+            <a href="#"><u>首页</u></a> 
+        </div>
+        <div class="select_area">
+            <div class="line">
+                <b>角色</b><a class="active" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a href="#" class="more"><b>更多>></b></a>
+                <HR align=center width=860px color=#797979 SIZE=1 style="margin-top: 30px">
+            </div>
+            <div class="line">
+                <b>情绪</b><a class="active" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a href="#" class="more"><b>更多>></b></a>
+                <HR align=center width=860px color=#797979 SIZE=1 style="margin-top: 30px">
+            </div>
+             <div class="line">
+                <b>情境</b><a class="active" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a href="#" class="more"><b>更多>></b></a>
+                <HR align=center width=860px color=#797979 SIZE=1 style="margin-top: 30px">
+            </div>
+            <div class="line">
+                <b>风格</b><a class="active" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a class="" href="javascript:;">全部</a><a href="#" class="more"><b>更多>></b></a>
+            </div>
+        </div>
+        <div class="reminder">以下为“<a>xxx</a>”的检索结果，共<a>x</a>条：</div>
+        <div class="result_header">
+            <a><&nbsp;1/20&nbsp;></a>
+        </div>
+        <div class="result_area">
+            <img src="images/place.png" style="margin-left: 20px"><img src="images/place.png"><img src="images/place.png"><img src="images/place.png">
+             <img src="images/place.png" style="margin-left: 20px"><img src="images/place.png"><img src="images/place.png"><img src="images/place.png">
+              <img src="images/place.png" style="margin-left: 20px"><img src="images/place.png"><img src="images/place.png"><img src="images/place.png">
+               <img src="images/place.png" style="margin-left: 20px"><img src="images/place.png"><img src="images/place.png"><img src="images/place.png">
+                <img src="images/place.png" style="margin-left: 20px"><img src="images/place.png"><img src="images/place.png"><img src="images/place.png">
+        </div>
+        <div class="page_area"><span class="page_button"><</span><span class="page_select" id="1">1</span><span class="page_number" id="2">2</span><span class="page_number" id="3">3</span><span class="page_number" id="4">4</span><span class="page_number" id="5">5</span><span class="page_number" id="6">6</span><span class="page_button">></span></div>
+</div>
+    <div style="font-size: 13px;line-height: 2em;margin-bottom: 30px">
+        © Copyright ISR BQB ®<br>
+        Please contact us through zdq
+    </div>
+ </center>
+ <script type="text/javascript">
+//按钮的点击事件
+    window.onload = function(){
+        //分类切换
+        var arr = document.getElementsByTagName('a');
+        for(var i = 0;i<arr.length;i++){
+            arr[i].onclick = function(){    
+                //this是当前激活的按钮，在这里可以写对应的操作  
+                if(this.className == ''){
+                    this.className = 'active';
+                }
+                else if(this.className == 'active'){
+                    this.className = '';
+                }  
+                }
+             } 
+
+        //页码切换
+        var arr1 = document.getElementsByTagName('span');
+        for(var m = 0;m<arr1.length;m++){
+            arr1[m].onclick = function(){    
+                //this是当前激活的按钮，在这里可以写对应的操作  
+                if(this.className == 'page_number'){
+                    this.className = 'page_select';
+                    var name = this.id;
+                    var btn = document.getElementsByClassName('page_select');
+                    for(var n=0;n<btn.length;n++){
+                        if(btn[n].id!=name){
+                            btn[n].className = 'page_number';
+                        }
+                    }   
+                }
+             } 
+         }
+        
+     }
+</script>
+</body>
+</html>
