@@ -3,21 +3,21 @@
 <head>
     <meta content="text/html" charset="UTF-8">
     <title>检索结果</title>
-    <link rel="icon" href="{{ url_for('static', filename = 'search_result/images/logo.gif') }}" type="image/x-icon"/>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'search_result/css/search_result.css', _external=True) }}">
+    <link rel="icon" href="../static/search_result/images/logo.gif" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="../static/search_result/css/search_result.css">
 </head>
 <body>
 <center>
     <div class="content">
         <div class="logo">
-            <a href="#"><img src="{{ url_for('static', filename = 'search_result/images/title.png') }}"
+            <a href="#"><img src="../static/search_result/images/title.png"
                              style="width: 259px;height: 40px"></a>
-            <img src="{{ url_for('static', filename = 'search_result/images/logo.gif') }}"
+            <img src="../static/search_result/images/logo.gif"
                  style="width: 31px;height: 35px;margin-left: 10px">
         </div>
         <div class="search_bar">
-            <img src="{{ url_for('static', filename = 'search_result/images/search_icon.png') }}" class="search_icon">
-            <img src="{{ url_for('static', filename = 'search_result/images/image_icon.png') }}" class="image_icon">
+            <img src="../static/search_result/images/search_icon.png" class="search_icon">
+            <img src="../static/search_result/images/image_icon.png" class="image_icon">
             <input type="text" class="input" placeholder="熊猫头"/>
             <button class="button" type="submit">搜索</button>
             <a href="#"><u>首页</u></a>
@@ -66,9 +66,9 @@
         <div class="result_area">
             {% for i in range(20) %}
                 {% if i%4==0 %}
-                    <img src="{{ url_for('static', filename = 'search_result/images/place.png') }}" style="margin-left: 20px">
+                    <img src="../static/search_result/images/place.png" style="margin-left: 20px">
                 {% else %}
-                    <img src="{{ url_for('static', filename = 'search_result/images/place.png') }}">
+                    <img src="../static/search_result/images/place.png">
                 {% endif %}
             {% endfor %}
         </div>
