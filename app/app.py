@@ -6,6 +6,58 @@ from flask import Flask, render_template, request
 from main.retrieval.retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
 
 
+app = Flask(__name__)
+
+
+def retrieve(query):
+    res = [
+        {
+            'name': '0001.jpg',
+            'src_path': 'static/bqbSource/0001.jpg',
+            'score': 78.8,
+            'description': 'it is a description',
+            'role': ['熊猫头', '黄脸'],
+            'emotion': ['开心', '愤怒'],
+            'style': ['沙雕', '睿智'],
+            'topic': ['怼人']
+        },
+        {
+            'name': '0002.jpg',
+            'src_path': 'static/bqbSource/0002.jpg',
+            'score': 71.8,
+            'description': 'it is a description',
+            'role': ['熊猫头', '黄脸'],
+            'emotion': ['开心', '愤怒'],
+            'style': ['沙雕', '睿智'],
+            'topic': ['怼人']
+        },
+        {
+            'name': '0003.jpg',
+            'src_path': 'static/bqbSource/0003.jpg',
+            'score': 68.8,
+            'description': 'it is a description',
+            'role': ['熊猫头', '黄脸'],
+            'emotion': ['开心', '愤怒'],
+            'style': ['沙雕', '睿智'],
+            'topic': ['怼人']
+         }
+    ]
+
+    return res
+
+
+@app.route('/')
+def index():
+    res = retrieve("熊猫头")
+    return render_template('search_result.html',
+                           success=True,
+                           query_mode=2,
+                           query_info='query/query.jpg',
+                           length=len(res),
+                           data=res)
+
+# ========以下除了main函数，都是cnn的模块，调试前端的同学可以注释掉========
+
 # Create thumb images.
 create_thumb_images(full_folder='static/cnn_test/image_database/',
                     thumb_folder='static/cnn_test/thumb_images/',
@@ -29,37 +81,10 @@ gallery_feature, image_paths = extract_feature(model=model, dataloaders=data_loa
 
 # Picture extension supported.
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'JPG', 'PNG', 'bmp', 'jpeg', 'JPEG'])
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
-app = Flask(__name__)
-
-
-def retrieve(query):
-    res = [
-        {'name': '0001.jpg', 'src_path': 'static/bqbSource/0001.jpg',
-         'score': 78.8, 'description': 'it is a description'},
-        {'name': '0002.jpg', 'src_path': 'static/bqbSource/0002.jpg',
-         'score': 76.1, 'description': 'it is a description'},
-        {'name': '0003.jpg', 'src_path': 'static/bqbSource/0003.jpg',
-         'score': 76.1, 'description': 'it is a description'},
-        {'name': '0004.jpg', 'src_path': 'static/bqbSource/0004.jpg',
-         'score': 76.1, 'description': 'it is a description'},
-        {'name': '0005.jpg', 'src_path': 'static/bqbSource/0005.jpg',
-         'score': 76.1, 'description': 'it is a description'},
-        {'name': '0006.jpg', 'src_path': 'static/bqbSource/0006.jpg',
-         'score': 76.1, 'description': 'it is a description'}
-    ]
-
-    return res
-
-
-@app.route('/')
-def index():
-    res = retrieve("熊猫头")
-    return render_template('search_result.html', success=True, data=res,
-                           length=len(res))
 
 
 @app.route('/cnn', methods=['POST', 'GET'])  # add route

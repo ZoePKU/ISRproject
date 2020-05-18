@@ -64,7 +64,7 @@ $ venv\Scripts\activate
 # 浏览器输入 http://127.0.0.1:8080 就可以访问项目了
 ```
 
-另外，CNN的模型比较大，不放git了，[在这个链接](https://lanzous.com/icpnpsd)下载后解压，把`net_best.pth`放入`app/main/cnn/models/`这个文件夹。
+另外，CNN的模型比较大，不放git了，[在这个链接](https://lanzous.com/icpnpsd)下载后解压，把`net_best.pth`放入`app/main/retrieval/models/`这个文件夹。
 
 
 
@@ -77,20 +77,30 @@ $ venv\Scripts\activate
 - 接口格式如下：==你们觉得还需要加一些内容吗（比如情境什么的）==
 
   ```python
-  success=True
-  length=3
+  success=1 # 1成功 2后端发生错误
+  query_mode=2 # 1表示用户发起的是文本检索，2表示图片检索
+  query_info='query/query.jpg' # 文本检索为检索式，图片检索为检索图片后台保存的路径(均在static文件夹下)
+  length=2 # 检索结果数量
   data=[
     {
-    'name': '0001.jpg',
-    'src_path': 'static/bqbSource/0001.jpg',
-    'score': 78.8,
-    'description': 'it is a description'
+      'name': '0001.jpg',
+      'src_path': 'static/bqbSource/0001.jpg',
+      'score': 78.8,
+      'description': 'it is a description',
+      'role': ['熊猫头', '黄脸'],
+      'emotion': ['开心', '愤怒'],
+      'style': ['沙雕', '睿智'],
+      'topic': ['怼人']
     },
     {
-    'name': '0002.jpg',
-    'src_path': 'static/bqbSource/0002.jpg',
-    'score': 71.2,
-    'description': 'it is a description'
+      'name': '0002.jpg',
+      'src_path': 'static/bqbSource/0002.jpg',
+      'score': 71.2,
+      'description': 'it is a description',
+      'role': ['熊猫头', '黄脸'],
+      'emotion': ['开心', '愤怒'],
+      'style': ['沙雕', '睿智'],
+      'topic': ['怼人']
     },
   ]
   ```
