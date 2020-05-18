@@ -77,7 +77,7 @@ $ venv\Scripts\activate
 - 接口格式如下：==你们觉得还需要加一些内容吗（比如情境什么的）==
 
   ```python
-  success=1 # 1成功 2后端发生错误
+  success=1 # 1成功 0后端发生错误
   query_mode=2 # 1表示用户发起的是文本检索，2表示图片检索
   query_info='query/query.jpg' # 文本检索为检索式，图片检索为检索图片后台保存的路径(均在static文件夹下)
   length=2 # 检索结果数量
