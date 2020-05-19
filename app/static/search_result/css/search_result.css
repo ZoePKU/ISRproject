@@ -77,6 +77,7 @@ button:focus{
 
 .select_area
 {
+    position:relative;
 	width: 900px;
 	height: 245px;
 	margin-top: 30px;
@@ -158,61 +159,4 @@ button:focus{
 	 */
 	margin-left: 50px;
 	margin-top: 40px;
-}
-
-.page_area
-{
-	width: 600px;
-	height: 100px;
-}
-
-.page_number
-{
-  width:40px;
-  height:30px;
-  background-color:rgba(242, 242, 242, 1);
-  border:none;
-  border-radius:5px;
-  font-family:'Arial Negreta', 'Arial Normal', 'Arial', sans-serif;
-  font-weight:700;
-  font-size: 14px;
-  color: #555555;
-  padding-top: 10px;
-  margin-left: 30px;
-  float: left;
-  cursor: pointer;
-}
-
-.page_select
-{
-  width:40px;
-  height:30px;
-  background-color: #409EFF;
-  color: #fff;
-  border:none;
-  border-radius:5px;
-  font-family:'Arial Negreta', 'Arial Normal', 'Arial', sans-serif;
-  font-weight:700;
-  font-size: 14px;
-  padding-top: 10px;
-  margin-left: 30px;
-  float: left;
-  cursor: pointer;
-}
- 
-.page_button
-{
-  width:40px;
-  height:30px;
-  background-color:rgba(242, 242, 242, 1);
-  border:none;
-  border-radius:5px;
-  font-family:'Arial Negreta', 'Arial Normal', 'Arial', sans-serif;
-  font-weight:700;
-  font-size: 14px;
-  color: #555555;
-  padding-top: 10px;
-  margin-left: 30px;
-  float: left;
-  cursor: pointer;
 }
