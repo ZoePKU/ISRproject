@@ -10,7 +10,7 @@
 
 - 停用词表和w2v模型已经找到（李总说看起来效果挺好的，但还没有用）
 - 切词效果大家觉得如何
-- 万恶的CNN在李总呕心沥血配置tensorflow失败之后使用tourch配置成功，已经可以运行
+- 万恶的CNN在李总呕心沥血配置tensorflow失败之后使用torch配置成功，已经可以运行
 - 数据库还没有确定，有点拿不准，群里有空了讨论一下吧
 - flask框架基本搭好，数据库部分还没定下来
 
@@ -47,7 +47,7 @@ $ venv\Scripts\activate
 
 # 安装所有依赖库（有虚拟环境后macOS同学可以不用写pip3了）
 (venv) $ pip install -r requirements.txt
-# 这里花时间可能会很长，建议翻墙（pytorch模块不翻墙很可能装不上）
+# 这里花时间可能会很长，建议翻墙（torch模块不翻墙很可能装不上）
 
 # 安装完之后就可以启动项目了（现在项目很不完整，没啥好看的，主要是给前端同学用来调试）
 (venv) $ python app/app.py
@@ -81,6 +81,7 @@ $ venv\Scripts\activate
   query_mode=2 # 1表示用户发起的是文本检索，2表示图片检索
   query_info='query/query.jpg' # 文本检索为检索式，图片检索为检索图片后台保存的路径(均在static文件夹下)
   length=2 # 检索结果数量
+  page=1
   data=[
     {
       'name': '0001.jpg',
