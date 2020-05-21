@@ -77,12 +77,10 @@ button:focus{
 
 .select_area
 {
-    position:relative;
 	width: 900px;
-	height: 245px;
+	height: 500px;
 	margin-top: 30px;
 	border:1px solid rgba(121, 121, 121, 0.5);
-	padding: 30px 30px 30px 10px;
 }
 
 .line
@@ -90,6 +88,7 @@ button:focus{
 	height: 75px;
 	font-size: 14px;
 	color: #333333
+	border-bottom:1px #ccc solid;
 }
 
 .line a
