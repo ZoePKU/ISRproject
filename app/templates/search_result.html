@@ -35,18 +35,19 @@
         <div class="select_area">
             {% for cata_name in ['角色','情绪','情境','风格'] %}
                 <div class="line">
-                    <b>角色</b><a class="active" onClick="transverse(this)" type="0" style="background-color:#797979;">全部</a>
+                    <b>{{ cata_name }}</b><a class="active" onClick="transverse(this)" type="0" style="background-color:#797979;">全部</a>
                     {%- for i in range(7) -%}
                     <a class="normal" onClick="choosetype(this)">xxx</a>
                     {%- endfor -%}
-                    <a href="javascript:show();" class=" " id="btn"><b>更多∨</b></a>
-                     <div id="more" style="margin-top:6px;margin-left:18px;display:none;line-height:2em">
+                    <a class="btn" onClick="show(this)" style="font-weight:800;">更多∨</a>
+                     <div class="more">
                     {%- for i in range(3) -%}
                          {%- for j in range(7) -%}
                     <a class="normal" onClick="choosetype(this)">xxx</a>
                     {%- endfor -%}<br>
                     {%- endfor -%}
                 </div>
+                    <hr class="hr"/>
                 </div>
             {% endfor %}
         </div>
@@ -109,17 +110,21 @@
 		});
 
 	}
-	 function show(){
-            document.getElementById("more").style.display = "block";
-            document.getElementById('btn').innerHTML="更多∧";
-            document.getElementById('btn').href="javascript:hide();";
+
+    //================      展开与收缩             ====================
+	 function show(obj){
+            $(obj).parents(".line").find(".more").css({"display":"block","height":"auto"});
+            $(obj).html("更多∧");
+            $(obj).attr("onclick","hide(this);");
         }
 
-        function hide(){
-            document.getElementById('more').style.display='none';
-            document.getElementById('btn').innerHTML="更多∨";
-            document.getElementById('btn').href="javascript:show();";
+        function hide(obj){
+            $(obj).parents(".line").find(".more").css({"display":"none","height":"75px"});
+            $(obj).html("更多∨");
+            $(obj).attr("onclick","show(this);");
         }
+
+     $(".hr:last").css("display","none");
 </script>
 <script src="../static/search_result/js/MyPaging.js"></script>
 <script src="../static/search_result/js/script.js"></script>
