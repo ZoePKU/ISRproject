@@ -136,5 +136,12 @@ def image_retrieval():
     return render_template('upload.html')
 """
 
+
+@app.route('/index')
+# 本来应该给这个函数命名为index的，但是上面已经用了index名字，暂时这样吧
+def real_index():
+    return render_template('index.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
