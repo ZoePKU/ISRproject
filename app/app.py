@@ -3,8 +3,8 @@ import cv2
 import time
 from main.retrieval.create_thumb_images import create_thumb_images
 from flask import Flask, render_template, request
-from main.retrieval.retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
-
+from main.retrieval.retrieval import load_model, load_data, extract_feature, \
+    load_query_image, sort_img, extract_feature_query
 
 app = Flask(__name__)
 
@@ -40,7 +40,7 @@ def retrieve(query):
             'emotion': ['开心', '愤怒'],
             'style': ['沙雕', '睿智'],
             'topic': ['怼人']
-         }
+        }
     ]
 
     return res
@@ -56,8 +56,9 @@ def index():
                            length=len(res),
                            data=res)
 
-# ========以下除了main函数，都是cnn的模块，调试前端的同学可以注释掉========
 
+# ========以下除了main函数，都是cnn的模块，调试前端的同学可以注释掉========
+"""
 # Create thumb images.
 create_thumb_images(full_folder='static/cnn_test/image_database/',
                     thumb_folder='static/cnn_test/thumb_images/',
@@ -133,7 +134,7 @@ def image_retrieval():
                                    img1_tmb=tmb_images[0], img2_tmb=tmb_images[1], img3_tmb=tmb_images[2], img4_tmb=tmb_images[3], img5_tmb=tmb_images[4], img6_tmb=tmb_images[5])
 
     return render_template('upload.html')
-
+"""
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
