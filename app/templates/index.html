@@ -4,12 +4,10 @@
 <head>
 	<title>首页</title>
     <link rel="icon" href="../static/index/images/logo.gif" type="image/x-icon"/>
-    <link rel="icon" href="images/glass.png" type="image/x-icon" />
-    <link rel="icon" href="images/close.png" type="image/x-icon" />
-    <link rel="icon" href="images/camera.png" type="image/x-icon" />
-    <link href="index.css" type="text/css" rel="stylesheet">
-    <script type="text/javascript" src="index.js"></script>
-    <script src="/jquery/jquery-1.11.1.min.js"></script>
+    <link rel="icon" href="../static/index/images/glass.png" type="image/x-icon" />
+    <link rel="icon" href="../static/index/images/close.png" type="image/x-icon" />
+    <link rel="icon" href="../static/index/images/camera.png" type="image/x-icon" />
+    <link href="../static/index/index.css" type="text/css" rel="stylesheet">
    <script>
     function show(){
     document.getElementById("image_search").style.visibility="visible";
@@ -28,14 +26,14 @@
     <center>
     <div class="content">
         <div class="logo">
-            <a href="#"><img src="images/title.png" style="width: 500px;height: 60px"></a>
-            <img src="images/logo.gif" style="width: 60px;height: 60px;margin-left: 10px">
+            <a href="#"><img src="../static/index/images/title.png" style="width: 500px;height: 60px"></a>
+            <img src="../static/index/images/logo.gif" style="width: 60px;height: 60px;margin-left: 10px">
         </div>
         
         <div class="search_bar">
-            <img src="images/search_icon.png" class="search_icon">
+            <img src="../static/index/images/search_icon.png" class="search_icon">
             <input type="text" class="input" placeholder="熊猫头"/>
-            <input type="button" class="image_icon" onClick="show();" style="background: url(images/image_icon.svg);width:20px;height:20px;margin-top:10px;margin-left:150px;"/>
+            <input type="button" class="image_icon" onClick="show();" style="background: url(../static/index/images/image_icon.svg);width:20px;height:20px;margin-top:10px;margin-left:150px;"/>
                 
             <button class="button" type="submit">搜索</button>
             <a href="../search_result.html" target="_blank" style="font-family:'Arial Normal', 'Arial', sans-serif;"><strong><u>分类浏览</u></strong></a>
@@ -43,7 +41,7 @@
         
         <div id="image_search" style="border: 1px solid #DBDBDB; visibility:hidden; margin-top:30px;width:700px;height:600px;" >
         <p class="image_search_font">按图片搜索</p>
-        <input type="button" class="close_icon" onClick="hide();" style="background: url(images/close.svg);width:16px;height:16px;"/>
+        <input type="button" class="close_icon" onClick="hide();" style="background: url(../static/index/images/close.svg);width:16px;height:16px;"/>
         
         <button class="button_2" type="submit">上传图片</button>
         <input type="text" class="input_2" placeholder="选择图片路径"/>
