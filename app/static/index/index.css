@@ -1,0 +1,169 @@
+
+.content{
+    width: 980px;
+    margin-top: 83px;
+    position: relative;
+}
+
+.logo
+{
+    float: center;
+    margin-top: 220px;
+}
+
+.search_bar
+{
+    
+    margin-left: 0px;
+    margin-top: 30px;
+}
+
+.search_bar a
+{
+    margin-left: 10px;
+    
+    font-size: 16px;
+    color: #027DB4;
+}
+
+.search_icon
+{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 110px;
+    margin-top:14px;
+}
+
+.image_icon
+{
+    position: absolute;
+    left:500px;
+    margin-top：50px;
+    border:none;
+    cursor: pointer;
+
+}
+
+.close_icon
+{
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    right: 200px;
+    margin-top:-40px;
+    border:none;
+    cursor: pointer;
+
+}
+
+.input
+{
+    width:550px;
+    height:42px;
+    border:1px solid #DBDBDB;
+    border-radius:20px;
+    padding-left: 50px;
+    font-size:15px;
+}
+
+input:focus{
+    outline: none;
+    border: 1px solid #409EFF;
+}
+
+.button
+{
+    width:100px;
+      height:42px;
+      background-color:rgba(64, 158, 255, 1);
+      border:none;
+      border-radius:10px;
+      margin-left: 20px;
+      font-size:15px;
+      color: white;
+      cursor: pointer;
+      
+}
+
+button:focus{
+    outline: none;
+}
+
+
+.image_search{
+    width:635px;
+    height:600px;
+    float:center;
+    margin-top:30px;
+    
+}
+
+.image_search_font{
+    font-size:18px;
+    font-family:'Arial Normal', 'Arial', sans-serif;
+    font-weight:700;
+    color:#555555;
+    text-align:left;
+    margin-left:20px;
+}
+
+.button_2
+{
+    width:100px;
+    height:30px;
+      background-color:rgba(64, 158, 255, 1);
+      border:none;
+      border-radius:10px;
+      margin-right: 30px;
+      color: white;
+      cursor: pointer;
+      
+}
+
+button_2:focus{
+    outline: none;
+}
+
+.input_2
+{
+    width:350px;
+    height:28px;
+    border:1px solid #DBDBDB;
+    padding-left: 10px;
+}
+
+input_2:focus{
+    outline: none;
+    border: 1px solid #409EFF;
+}
+
+.button_3{
+    width:100px;
+    height:30px;
+      background-color:rgba(64, 158, 255, 1);
+      border:none;
+      border-radius:10px;
+      margin-right:10px;
+      margin-top: 20px;
+      color: white;
+      cursor: pointer;
+      
+}
+
+button_3:focus{
+    outline: none;
+}
+
+.image_show{
+    width:465px;
+    height:360px;
+    float:center;
+    margin-top:30px;
+    
+}
+
+.footer{
+    float:center;
+    margin-top:30px;
+}

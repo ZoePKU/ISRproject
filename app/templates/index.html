@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+<head>
+	<title>首页</title>
+    <link rel="icon" href="images/logo.gif" type="image/x-icon" /
+    <link rel="icon" href="images/glass.png" type="image/x-icon" />
+    <link rel="icon" href="images/close.png" type="image/x-icon" />
+    <link rel="icon" href="images/camera.png" type="image/x-icon" />
+    <link href="index.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="index.js"></script>
+    <script src="/jquery/jquery-1.11.1.min.js"></script>
+   <script>
+    function show(){
+    document.getElementById("image_search").style.visibility="visible";
+    }
+   
+   function hide(){
+       var myId=document.getElementById("image_search");
+      if(myId.style.visibility == "visible"){
+      document.getElementById("image_search").style.visibility="hidden";
+      }
+   }
+   </script>
+</head>
+
+<body>
+    <center>
+    <div class="content">
+        <div class="logo">
+            <a href="#"><img src="images/title.png" style="width: 500px;height: 60px"></a>
+            <img src="images/logo.gif" style="width: 60px;height: 60px;margin-left: 10px">
+        </div>
+        
+        <div class="search_bar">
+            <img src="images/search_icon.png" class="search_icon">
+            <input type="text" class="input" placeholder="熊猫头"/>
+            <input type="button" class="image_icon" onClick="show();" style="background: url(images/image_icon.svg);width:20px;height:20px;margin-top:10px;margin-left:150px;"/>
+                
+            <button class="button" type="submit">搜索</button>
+            <a href="../search_result.html" target="_blank" style="font-family:'Arial Normal', 'Arial', sans-serif;"><strong><u>分类浏览</u></strong></a>
+        </div>
+        
+        <div id="image_search" style="border: 1px solid #DBDBDB; visibility:hidden; margin-top:30px;width:700px;height:600px;" >
+        <p class="image_search_font">按图片搜索</p>
+        <input type="button" class="close_icon" onClick="hide();" style="background: url(images/close.svg);width:16px;height:16px;"/>
+        
+        <button class="button_2" type="submit">上传图片</button>
+        <input type="text" class="input_2" placeholder="选择图片路径"/>
+        <p class="image_search_font">预览：</p>
+        <div class="image_show" style="border: 1px solid #DBDBDB">
+        </div>
+         <button class="button_3" type="submit">取消上传</button>
+         
+        </div>
+        
+        <div class="footer" style="font-size: 13px;line-height: 2em;margin-bottom: 30px">
+               © Copyright ISR BQB ®<br>
+               Please contact us through zdq
+           </div>
+        
+          </div>
+  </center>
+
+</body>
+</html>
