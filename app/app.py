@@ -4,12 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from main.retrieval.retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
 
 
-# 下面部分是为了解决cwd路径问题，我在pycharm设置了cwd为app，直接直接命令行启动会出问题
-# cwd = os.getcwd()
-# if os.path.split(cwd)[-1] == 'ISRproject':
-#     os.chdir('app')
-
-
+# 文字检索
 def retrieve(query):
     res = [
         {
@@ -59,6 +54,7 @@ gallery_feature, image_paths = extract_feature(model=model, dataloaders=data_loa
 print("===图片库特征提取完成===")
 
 
+# 图片检索
 def pic_retrieve():
     query_image = load_query_image('static/query/query.jpg')
     query_feature = extract_feature_query(model=model, img=query_image)
@@ -85,6 +81,11 @@ def pic_retrieve():
     return res
 
 
+def mix_retrieve(query_text):
+    res = []
+    return res
+
+
 app = Flask(__name__)
 # 下面是flask的路由部分
 
@@ -105,8 +106,25 @@ def index():
 def result():
     files = request.files
     form = request.form
-    # 接收到index页面的检索请求，带图片请求，调用图片检索
+    query_mode_flag = 0
+    if form.get("query_text"):
+        query_mode_flag += 1
     if files:
+        query_mode_flag += 2
+
+    # 接收到index页面的检索请求，图文都有
+    if query_mode_flag == 3:
+        query_text = form.get("query_text")
+        res = mix_retrieve(query_text)
+        return render_template('search_result.html',
+                               success=True,
+                               query_mode=2,
+                               query_info='query/query.jpg',
+                               length=len(res),
+                               data=res)
+
+    # 接收到index页面的检索请求，带图片请求，调用图片检索
+    elif query_mode_flag == 2:
         print("图片检索方式")
         query_image = files['query_img']
         query_image.save('static/query/query.jpg')
@@ -119,7 +137,7 @@ def result():
                                length=len(res),
                                data=res)
     # 接收到index页面的检索请求，没有图片的请求，返回文字检索的结果
-    elif form.get("query_text"):
+    elif query_mode_flag == 1:
         print("文字检索方式")
         query_text = form.get("query_text")
         print(query_text)
