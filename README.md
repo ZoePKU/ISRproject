@@ -49,8 +49,10 @@ $ venv\Scripts\activate
 (venv) $ pip install -r requirements.txt
 # 这里花时间可能会很长，建议翻墙（torch模块不翻墙很可能装不上）
 
-# 安装完之后就可以启动项目了（现在项目很不完整，没啥好看的，主要是给前端同学用来调试）
-(venv) $ python app/app.py
+# 安装完之后就可以启动项目了，先进入app路径，必须这么做，否则路径出错
+(venv) $ cd app
+# 运行 app.py 启动服务器
+(venv) $ python app.py
 # 命令行会输出类似下面的命令
  * Serving Flask app "app" (lazy loading)
  * Environment: production

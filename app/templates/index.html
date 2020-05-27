@@ -33,14 +33,14 @@
 
         {#搜索栏#}
         <div class="search_bar">
-            <form method="post" enctype="multipart/form-data" action="{{ url_for('index') }}">
+            <form method="post" enctype="multipart/form-data" action="{{ url_for('result') }}">
                 <img src="../static/index/images/search_icon.png" class="search_icon">
                 <input type="text" class="input" id="query-text" placeholder="熊猫头" name="query_text"/>
                 <input type="file" class="img-input" id="query-img" name="query_img" accept="image/png, image/jpeg, image/gif, image/jpg" onchange="upload(this)" style="display: none"/>
                 <input type="button" class="image_icon" onClick="show();"
                        style="background: url(../static/index/images/image_icon.svg);width:20px;height:20px;margin-top:10px;margin-left:150px;"/>
                 <button class="button" type="submit">搜索</button>
-                <a href="{{ url_for('index') }}"
+                <a href="{{ url_for('result') }}"
                    style="font-family:'Arial Normal', 'Arial', sans-serif;"><strong><u>分类浏览</u></strong></a>
             </form>
         </div>

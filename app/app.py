@@ -1,14 +1,13 @@
 import os
-import cv2
-import time
-import json
 import copy
-from main.retrieval.create_thumb_images import create_thumb_images
-from flask import Flask, render_template, request
-from main.retrieval.retrieval import load_model, load_data, extract_feature, \
-    load_query_image, sort_img, extract_feature_query
+from flask import Flask, render_template, request, redirect, url_for
+from main.retrieval.retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
 
-app = Flask(__name__)
+
+# 下面部分是为了解决cwd路径问题，我在pycharm设置了cwd为app，直接直接命令行启动会出问题
+# cwd = os.getcwd()
+# if os.path.split(cwd)[-1] == 'ISRproject':
+#     os.chdir('app')
 
 
 def retrieve(query):
@@ -47,34 +46,17 @@ def retrieve(query):
     return res
 
 
-# ========以下除了main函数，都是cnn的模块，调试前端的同学可以注释掉========
-# Create thumb images.
-# create_thumb_images(full_folder='static/cnn_test/image_database/',
-#                     thumb_folder='static/cnn_test/thumb_images/',
-#                     suffix='',
-#                     height=200,
-#                     del_former_thumb=True,
-#                     )
-
+# ======== cnn模块的准备工作 ========
 # Prepare data set.
-data_loader = load_data(data_path='static/cnn_test/image_database/',
-                        batch_size=2,
-                        shuffle=False,
-                        transform='default',
-                        )
-
+print(os.getcwd())
+data_loader = load_data(data_path='static/cnn_test/image_database/', batch_size=2, shuffle=False, transform='default')
+print("===图片库加载完成===")
 # Prepare model.
 model = load_model(pretrained_model='main/retrieval/models/net_best.pth', use_gpu=True)
-
+print("===模型加载完成===")
 # Extract database features.
 gallery_feature, image_paths = extract_feature(model=model, dataloaders=data_loader)
-
-# Picture extension supported.
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'JPG', 'PNG', 'bmp', 'jpeg', 'JPEG'])
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+print("===图片库特征提取完成===")
 
 
 def pic_retrieve():
@@ -83,7 +65,9 @@ def pic_retrieve():
     similarity, image_index = sort_img(query_feature, gallery_feature)
     sorted_paths = [image_paths[i] for i in image_index]
     print(sorted_paths)
-    tmb_images = ['./static/cnn_test/thumb_images/' + os.path.split(sorted_path)[1] for sorted_path in sorted_paths]
+    tmb_images = [
+        './static/cnn_test/image_database/' + os.path.split(sorted_path)[1] for
+        sorted_path in sorted_paths]
     res_tmp = {
         'name': '0001.jpg',
         'src_path': 'static/bqbSource/0001.jpg',
@@ -101,8 +85,24 @@ def pic_retrieve():
     return res
 
 
-@app.route('/', methods=['GET', 'POST'])
+app = Flask(__name__)
+# 下面是flask的路由部分
+
+
+@app.route('/')
+def root():
+    # return redirect(url_for(index))
+    return render_template('index.html')
+
+
+@app.route('/index')
+# 本来应该给这个函数命名为index的，但是上面已经用了index名字，暂时这样吧
 def index():
+    return render_template('index.html')
+
+
+@app.route('/result', methods=['GET', 'POST'])
+def result():
     files = request.files
     form = request.form
     # 接收到index页面的检索请求，带图片请求，调用图片检索
@@ -138,12 +138,6 @@ def index():
                                query_mode=0,
                                query_info='',
                                length=0)
-
-
-@app.route('/index')
-# 本来应该给这个函数命名为index的，但是上面已经用了index名字，暂时这样吧
-def real_index():
-    return render_template('index.html')
 
 
 if __name__ == '__main__':

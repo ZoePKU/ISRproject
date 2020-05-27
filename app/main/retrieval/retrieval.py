@@ -9,7 +9,6 @@ from torch.autograd import Variable
 from torchvision import datasets, models, transforms
 import os
 
-
 from torch.utils.data import dataloader, Dataset
 from PIL import Image
 
@@ -104,13 +103,13 @@ def extract_feature(model, dataloaders, use_gpu=True):
 
 def extract_feature_query(model, img, use_gpu=True):
     c, h, w = img.size()
-    img = img.view(-1,c,h,w)
+    img = img.view(-1, c, h, w)
     use_gpu = use_gpu and torch.cuda.is_available()
     img = img.cuda() if use_gpu else img
     input_img = Variable(img)
     outputs = model(input_img)
     ff = outputs.data.cpu()
-    fnorm = torch.norm(ff,p=2,dim=1, keepdim=True)
+    fnorm = torch.norm(ff, p=2, dim=1, keepdim=True)
     ff = ff.div(fnorm.expand_as(ff))
     return ff
 
@@ -136,7 +135,7 @@ def load_model(pretrained_model=None, use_gpu=True):
     model = models.resnet50(pretrained=False)
     num_ftrs = model.fc.in_features
     add_block = []
-    add_block += [nn.Linear(num_ftrs, 30)]  #number of training classes
+    add_block += [nn.Linear(num_ftrs, 30)]  # number of training classes
     model.fc = nn.Sequential(*add_block)
     model.load_state_dict(torch.load(pretrained_model))
 
@@ -152,7 +151,7 @@ def load_model(pretrained_model=None, use_gpu=True):
 
 # sort the images
 def sort_img(qf, gf):
-    score = gf*qf
+    score = gf * qf
     score = score.sum(1)
     # predict index
     s, index = score.sort(dim=0, descending=True)
@@ -163,7 +162,6 @@ def sort_img(qf, gf):
 
 
 if __name__ == '__main__':
-
     # Prepare data.
     data_loader = load_data(data_path='./test_pytorch/gallery/images/',
                             batch_size=2,
@@ -172,10 +170,12 @@ if __name__ == '__main__':
                             )
 
     # Prepare model.
-    model = load_model(pretrained_model='./model/ft_ResNet50/net_best.pth', use_gpu=True)
+    model = load_model(pretrained_model='./model/ft_ResNet50/net_best.pth',
+                       use_gpu=True)
 
     # Extract database features.
-    gallery_feature, image_paths = extract_feature(model=model, dataloaders=data_loader)
+    gallery_feature, image_paths = extract_feature(model=model,
+                                                   dataloaders=data_loader)
 
     # Query.
     query_image = load_query_image('./test_pytorch/query/query.jpg')
@@ -188,4 +188,3 @@ if __name__ == '__main__':
 
     sorted_paths = [image_paths[i] for i in index]
     print(sorted_paths)
-
