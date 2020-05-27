@@ -1,34 +1,30 @@
 <!DOCTYPE html>
 <html>
-<meta charset="utf-8" />
+<meta charset="utf-8"/>
 <head>
-	<title>首页</title>
+    <title>首页</title>
     <link rel="icon" href="../static/index/images/logo.gif" type="image/x-icon"/>
-    <link rel="icon" href="../static/index/images/glass.png" type="image/x-icon" />
-    <link rel="icon" href="../static/index/images/close.png" type="image/x-icon" />
-    <link rel="icon" href="../static/index/images/camera.png" type="image/x-icon" />
     <link href="../static/index/index.css" type="text/css" rel="stylesheet">
+    <script src="../static/search_result/js/jquery.min.js"></script>
     <script src="../static/index/js/index.js"></script>
-   <script>
-<!-- 点击相机图标出现上传图片框-->
-    function show(){
-    document.getElementById("image_search").style.visibility="visible";
-    }
- <!--点击关闭图标关闭上传图片框-->
-   function hide(){
-       var myId=document.getElementById("image_search");
-      if(myId.style.visibility == "visible"){
-      document.getElementById("image_search").style.visibility="hidden";
-      }
-   }
-   
+    <script>
+        <!-- 点击相机图标出现上传图片框-->
+        function show() {
+            document.getElementById("image_search").style.visibility = "visible";
+        }
 
-   
-   </script>
+        <!--点击关闭图标关闭上传图片框-->
+        function hide() {
+            var myId = document.getElementById("image_search");
+            if (myId.style.visibility == "visible") {
+                document.getElementById("image_search").style.visibility = "hidden";
+            }
+        }
+    </script>
 </head>
 
 <body>
-    <center>
+<center>
     <div class="content">
         <div class="logo">
             <a href="#"><img src="../static/index/images/title.png" style="width: 500px;height: 60px"></a>
@@ -37,36 +33,42 @@
 
         {#搜索栏#}
         <div class="search_bar">
-            <img src="../static/index/images/search_icon.png" class="search_icon">
-            <input type="text" class="input" placeholder="熊猫头"/>
-            <input type="button" class="image_icon" onClick="show();" style="background: url(../static/index/images/image_icon.svg);width:20px;height:20px;margin-top:10px;margin-left:150px;"/>
-                
-            <button class="button" type="submit">搜索</button>
-            <a href="search_result.html" target="_blank" style="font-family:'Arial Normal', 'Arial', sans-serif;"><strong><u>分类浏览</u></strong></a>
+            <form method="post" enctype="multipart/form-data" action="{{ url_for('index') }}">
+                <img src="../static/index/images/search_icon.png" class="search_icon">
+                <input type="text" class="input" id="query-text" placeholder="熊猫头" name="query_text"/>
+                <input type="file" class="img-input" id="query-img" name="query_img" accept="image/png, image/jpeg, image/gif, image/jpg" onchange="upload(this)" style="display: none"/>
+                <input type="button" class="image_icon" onClick="show();"
+                       style="background: url(../static/index/images/image_icon.svg);width:20px;height:20px;margin-top:10px;margin-left:150px;"/>
+                <button class="button" type="submit">搜索</button>
+                <a href="{{ url_for('index') }}"
+                   style="font-family:'Arial Normal', 'Arial', sans-serif;"><strong><u>分类浏览</u></strong></a>
+            </form>
         </div>
-        
-       {#图片上传#}
-        <div id="image_search" style="border: 1px solid #DBDBDB; visibility:hidden; margin-top:30px;width:700px;height:600px;" >
-        <p class="image_search_font">按图片搜索</p>
-        <input type="button" class="close_icon" onClick="hide();" style="background: url(../static/index/images/close.svg);width:16px;height:16px;"/>
-        
-        <button class="button_2" type="submit">上传图片</button>
-        <input type="text" class="input_2" placeholder="选择图片路径"/>
-        <p class="image_search_font">预览：</p>
-        <div class="image_show" style="border: 1px solid #DBDBDB">
-            <img src="#" id="imgs" onload="adapt();"/>
+
+        {#图片上传#}
+        <div id="image_search"
+             style="border: 1px solid #DBDBDB; visibility:hidden; margin-top:30px;width:700px;height:600px;">
+            <p class="image_search_font">按图片搜索</p>
+            <input type="button" class="close_icon" onClick="hide();"
+                   style="background: url(../static/index/images/close.svg);width:16px;height:16px;"/>
+
+            <button type="button" class="button_2" id="img-upload">上传图片</button>
+            <input type="text" class="input_2" placeholder="选择图片路径"/>
+            <p class="image_search_font">预览：</p>
+            <div class="image_show" style="border: 1px solid #DBDBDB">
+                <img src="" id="img-preview" onload="adapt();"/>
+            </div>
+            <button class="button_3" type="button">取消上传</button>
+
         </div>
-         <button class="button_3" type="submit">取消上传</button>
-         
-        </div>
-        
+
         <div class="footer" style="font-size: 13px;line-height: 2em;margin-bottom: 30px">
-               © Copyright ISR BQB ®<br>
-               Please contact us through zdq
-           </div>
-        
-          </div>
-  </center>
+            © Copyright ISR BQB ®<br>
+            Please contact us through zdq
+        </div>
+
+    </div>
+</center>
 
 </body>
 </html>

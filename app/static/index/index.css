@@ -7,7 +7,8 @@
 
 .logo
 {
-    float: center;
+    /*float没有center这个取值吧，这里要改一下*/
+    /*float:center;*/
     margin-top: 220px;
 }
 
@@ -39,7 +40,7 @@
 {
     position: absolute;
     left:500px;
-    margin-top：50px;
+    margin-top:50px;
     border:none;
     cursor: pointer;
 
@@ -94,7 +95,8 @@ button:focus{
 .image_search{
     width:635px;
     height:600px;
-    float:center;
+    /*float没有center这个取值吧，这里要改一下*/
+    /*float:center;*/
     margin-top:30px;
     
 }
@@ -158,12 +160,14 @@ button_3:focus{
 .image_show{
     width:465px;
     height:360px;
-    float:center;
+    /*float没有center这个取值吧，这里要改一下*/
+    /*float:center;*/
     margin-top:30px;
     
 }
 
 .footer{
-    float:center;
+    /*float没有center这个取值吧，这里要改一下*/
+    /*float:center;*/
     margin-top:30px;
 }

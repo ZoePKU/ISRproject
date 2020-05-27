@@ -1,6 +1,7 @@
 import os
 import cv2
 import time
+import json
 from main.retrieval.create_thumb_images import create_thumb_images
 from flask import Flask, render_template, request
 from main.retrieval.retrieval import load_model, load_data, extract_feature, \
@@ -46,15 +47,43 @@ def retrieve(query):
     return res
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    res = retrieve("熊猫头")
-    return render_template('search_result.html',
-                           success=True,
-                           query_mode=2,
-                           query_info='query/query.jpg',
-                           length=len(res),
-                           data=res)
+    files = request.files
+    form = request.form
+    # 接收到index页面的检索请求，带图片请求，调用图片检索
+    if files:
+        print("图片检索方式")
+        query_image = files['query_img']
+        query_image.save('static/query/query.jpg')
+        print(query_image.filename)
+        res = retrieve("熊猫头")
+        return render_template('search_result.html',
+                               success=True,
+                               query_mode=2,
+                               query_info='query/query.jpg',
+                               length=len(res),
+                               data=res)
+    # 接收到index页面的检索请求，没有图片的请求，返回文字检索的结果
+    elif form.get("query_text"):
+        print("文字检索方式")
+        query_text = form.get("query_text")
+        print(query_text)
+        res = retrieve(query_text)
+        return render_template('search_result.html',
+                               success=True,
+                               query_mode=1,
+                               query_info=query_text,
+                               length=len(res),
+                               data=res)
+    # 结果页面的展示，既没有图片也没有文字，返回空白的页面,这里目前是不返回图片
+    else:
+        print("屁都不是")
+        return render_template('search_result.html',
+                               success=True,
+                               query_mode=0,
+                               query_info='',
+                               length=0)
 
 
 # ========以下除了main函数，都是cnn的模块，调试前端的同学可以注释掉========
