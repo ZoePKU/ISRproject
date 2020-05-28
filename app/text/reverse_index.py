@@ -4,11 +4,11 @@ from collections import Counter
 import json
 from text.utils import *
 
-def description_parse(dict,thes_words,thes_dict):
+def description_parse(dict,thes_words,thes_dict, stop_words):
     cut_dict = {}
     for id in dict:
         if dict[id]:
-            cut_dict[id] = parse(dict[id],thes_words,thes_dict)
+            cut_dict[id] = parse(dict[id],thes_words,thes_dict,stop_words)
         else:
             cut_dict[id] = ""
     return cut_dict
@@ -37,7 +37,7 @@ def revert(cut_dict):
 if __name__ == '__main__':
 
     # 生成词表
-    thes_words, stop_words = init_thes()
+    thes_words, thes_dict, stop_words = init_thes()
 
     #读取图片描述
     des = openpyxl.load_workbook('text/bqb_description.xlsx')['bqb_description']
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     print("完成读取图片描述")
 
     #分词
-    cut_dict = description_parse(des_dict,thes_words,stop_words)
+    cut_dict = description_parse(des_dict,thes_words,thes_dict,stop_words)
     print("完成分词")
 
     #建倒排索引

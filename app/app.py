@@ -4,6 +4,10 @@ from flask import Flask, render_template, request, redirect, url_for
 from main.retrieval.retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
 from text.utils import *
 from main.db import *
+import numpy as np
+import torch
+import codecs
+
 
 # 下面部分是为了解决cwd路径问题，我在pycharm设置了cwd为app，直接直接命令行启动会出问题
 # cwd = os.getcwd()
@@ -34,9 +38,9 @@ def retrieve(query):
 
 
     #生成词表
-    thes_words,thes_dict = init_thes()
+    thes_words,thes_dict, stop_words = init_thes()
     #得到分词的列表
-    cut_list = parse(query,thes_words,thes_dict)
+    cut_list = parse(query,thes_words,thes_dict, stop_words)
     #读入倒排档json
     reverse_dict = input('text/reverse_index.json')
     Res = dict()
@@ -117,25 +121,25 @@ def retrieve(query):
     ]
     return res
 
-retrieve("漂亮宝贝")
+#retrieve("漂亮宝贝")
 
-
-
-# ======== cnn模块的准备工作 ========
-# Prepare data set.
-print(os.getcwd())
-data_loader = load_data(data_path='static/cnn_test/image_database/', batch_size=2, shuffle=False, transform='default')
-print("===图片库加载完成===")
-# Prepare model.
-model = load_model(pretrained_model='main/retrieval/models/net_best.pth', use_gpu=True)
-print("===模型加载完成===")
-# Extract database features.
-gallery_feature, image_paths = extract_feature(model=model, dataloaders=data_loader)
-print(gallery_feature)
-print("===图片库特征提取完成===")
-
-
-
+def CNN_prepararation():
+    # ======== cnn模块的准备工作 ========
+    # Prepare data set.
+    print(os.getcwd())
+    data_loader = load_data(data_path='static/cnn_test/image_database/', batch_size=2, shuffle=False,
+                            transform='default')
+    print("===图片库加载完成===")
+    # Prepare model.
+    model = load_model(pretrained_model='main/retrieval/models/net_best.pth', use_gpu=True)
+    print("===模型加载完成===")
+    # Extract database features.
+    gallery_feature, image_paths = extract_feature(model=model, dataloaders=data_loader)
+    # print(gallery_feature)
+    # 存储
+    enc = gallery_feature.detach().cpu().numpy()
+    np.savez("enc.npz", enc=enc)
+    print("===图片库特征提取完成===")
 
 def pic_retrieve():
     query_image = load_query_image('static/query/query.jpg')
@@ -219,4 +223,10 @@ def result():
 
 
 if __name__ == '__main__':
+    CNN_prepararation()
+    #读取图片特征
+    feat = np.load("enc.npz")
+    # print(feat['enc'])
+    gallery_feature = torch.tensor(feat)
+    print(gallery_feature)
     app.run(debug=True, port=8080)
