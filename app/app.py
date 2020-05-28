@@ -92,8 +92,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    # return redirect(url_for(index))
-    return render_template('index.html')
+    return redirect('index')
 
 
 @app.route('/index')
@@ -109,16 +108,17 @@ def result():
     query_mode_flag = 0
     if form.get("query_text"):
         query_mode_flag += 1
-    if files:
+    if files and files['query_img'] and files['query_img'].filename:
         query_mode_flag += 2
 
     # 接收到index页面的检索请求，图文都有
     if query_mode_flag == 3:
+        print("混合检索方式")
         query_text = form.get("query_text")
         res = mix_retrieve(query_text)
         return render_template('search_result.html',
                                success=True,
-                               query_mode=2,
+                               query_mode=3,
                                query_info='query/query.jpg',
                                length=len(res),
                                data=res)
