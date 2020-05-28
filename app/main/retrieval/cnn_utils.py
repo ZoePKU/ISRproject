@@ -48,8 +48,9 @@ def cnn_text_retrieve(query_image_path,query):
     similarity, image_index = sort_img(query_feature, cnn_load_feature())
     text_res = text_retrieve(query)
     length = image_index.size()
+    length = int(length)
     res = dict()
-    for i in length:
+    for i in range(length):
         res[image_index[i]] = 2 * similarity[i] * text_res[image_index[i]]/similarity[i] + text_res[image_index[i]]
     res = sorted_dict_values(res)
     #image_paths = cnn_load_image_paths()

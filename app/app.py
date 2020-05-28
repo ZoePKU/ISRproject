@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from main.retrieval.cnn_utils import cnn_retrieve
+from main.retrieval.cnn_utils import *
 from text.utils import *
 from main.db import *
 import copy
@@ -39,8 +39,8 @@ def text_retrieve(query):
     # w2v匹配(这个应该读入set，然后每个词和set里面的词匹配，但是考虑到优化，可能得先对set里的词聚类，这里没做)
     # 暂时没有聚类
     model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
-    simi_res = [(x, y, model.cosine_similarities(x, y)) for x in thes_words if model.cosine_similarities(x, y) > 0.8 for
-                y in cut_list]
+    for y in cut_list:
+        simi_res = [(x, y, model.similarity(x,y)) for x in thes_words if x in model and y in model and  model.similarity(x,y) > 0.8]
     for i in simi_res:
         for j in reverse_dict[i[0]]:  # i[0]是x
             if j in Res:
@@ -123,7 +123,7 @@ def pic_retrieve():
 
 
 def mix_retrieve(query_text):
-    tmb_images = cnn_retrieve('static/query/query.jpg',query_text)
+    tmb_images = cnn_text_retrieve('static/query/query.jpg',query_text)
     res = pic_info(tmb_images)
     return res
 
