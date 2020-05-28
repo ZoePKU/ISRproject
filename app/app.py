@@ -1,17 +1,15 @@
-import os
-import copy
-from flask import Flask, render_template, request, redirect, url_for
-from main.retrieval.retrieval import load_model, load_data, extract_feature, \
-    load_query_image, sort_img, extract_feature_query
+from flask import Flask, render_template, request, redirect
+from main.retrieval.cnn_utils import cnn_retrieve
 from text.utils import *
 from main.db import *
+import copy
 
 
 # 文字检索
-def sortedDictValues(adict, reverse=False):
-    keys = list(adict.keys())
+def sorted_dict_values(a_dict, reverse=False):
+    keys = list(a_dict.keys())
     keys.sort(reverse=reverse)
-    return [(key, adict[key]) for key in keys]
+    return [(key, a_dict[key]) for key in keys]
 
 
 def consult_db(session, table, field):
@@ -33,9 +31,9 @@ def retrieve(query):
     res_topic = consult_db(session, "bqb_context", "context")
 
     # 生成词表
-    thes_words, thes_dict = init_thes()
+    thes_words, thes_dict, stop_words = init_thes()
     # 得到分词的列表
-    cut_list = parse(query, thes_words, thes_dict)
+    cut_list = parse(query, thes_words, thes_dict, stop_words)
     # 读入倒排档json
     reverse_dict = input('text/reverse_index.json')
     Res = dict()
@@ -47,7 +45,7 @@ def retrieve(query):
                     Res[j] += reverse_dict[i][j]
                 else:
                     Res[j] = reverse_dict[i][j]
-    res_list = sortedDictValues(Res)
+    res_list = sorted_dict_values(Res)
 
     # w2v匹配(这个应该读入set，然后每个词和set里面的词匹配，但是考虑到优化，可能得先对set里的词聚类，这里没做)
 
@@ -85,33 +83,8 @@ def retrieve(query):
     return res
 
 
-# ======== cnn模块的准备工作 ========
-# Prepare data set.
-print(os.getcwd())
-data_loader = load_data(data_path='static/cnn_test/image_database/',
-                        batch_size=2, shuffle=False, transform='default')
-print("===图片库加载完成===")
-# Prepare model.
-model = load_model(pretrained_model='main/retrieval/models/net_best.pth',
-                   use_gpu=True)
-print("===模型加载完成===")
-# Extract database features.
-gallery_feature, image_paths = extract_feature(model=model,
-                                               dataloaders=data_loader)
-print(gallery_feature)
-print("===图片库特征提取完成===")
-
-
-# 图片检索
 def pic_retrieve():
-    query_image = load_query_image('static/query/query.jpg')
-    query_feature = extract_feature_query(model=model, img=query_image)
-    similarity, image_index = sort_img(query_feature, gallery_feature)
-    sorted_paths = [image_paths[i] for i in image_index]
-    print(sorted_paths)
-    tmb_images = [
-        './static/cnn_test/image_database/' + os.path.split(sorted_path)[1] for
-        sorted_path in sorted_paths]
+    tmb_images = cnn_retrieve('static/query/query.jpg')
     res_tmp = {
         'name': '0001.jpg',
         'src_path': 'static/bqbSource/0001.jpg',
