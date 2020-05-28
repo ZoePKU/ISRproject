@@ -2,6 +2,7 @@ import json
 from sqlalchemy import create_engine  # 连接数据库的方法
 from sqlalchemy.orm import sessionmaker
 
+
 def connect_db(host,db,user,pwd):
     # 连接数据库
     HOSTNAME = host

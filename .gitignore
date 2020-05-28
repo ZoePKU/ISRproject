@@ -154,3 +154,6 @@ app/static/cnn_test/upload_image/*
 
 # 检索图片
 app/static/query/query.jpg
+
+#w2v
+app/word2vec_779845.bin
