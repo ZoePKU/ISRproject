@@ -123,7 +123,7 @@ def retrieve(query):
 
 #retrieve("漂亮宝贝")
 
-def CNN_prepararation():
+def CNN_prep():
     # ======== cnn模块的准备工作 ========
     # Prepare data set.
     print(os.getcwd())
@@ -136,6 +136,7 @@ def CNN_prepararation():
     # Extract database features.
     gallery_feature, image_paths = extract_feature(model=model, dataloaders=data_loader)
     # print(gallery_feature)
+    print(image_paths)
     # 存储
     enc = gallery_feature.detach().cpu().numpy()
     np.savez("enc.npz", enc=enc)
@@ -223,10 +224,10 @@ def result():
 
 
 if __name__ == '__main__':
-    CNN_prepararation()
+    CNN_prep()
     #读取图片特征
     feat = np.load("enc.npz")
     # print(feat['enc'])
-    gallery_feature = torch.tensor(feat)
+    gallery_feature = torch.tensor(feat['enc'])
     print(gallery_feature)
     app.run(debug=True, port=8080)
