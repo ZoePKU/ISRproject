@@ -7,7 +7,7 @@ from gensim import models
 
 # 返回list
 def sorted_dict_values(a_dict, reverse=False):
-    lst = sorted(a_dict.items(),key = lambda item: item[1])
+    lst = sorted(a_dict.items(),key = lambda item: item[1], reverse=reverse)
     # 先转换为lst，然后根据第二个元素排序
     return lst
 
@@ -19,9 +19,6 @@ def consult_db(session, table, field):
     return res
 
 def text_retrieve(query):
-
-    # 生成词表
-    thes_words, thes_dict, stop_words = init_thes()
     # 得到分词的列表
     cut_list = parse(query, thes_words, thes_dict, stop_words)
     # 读入倒排档json
@@ -40,15 +37,15 @@ def text_retrieve(query):
     # 暂时没有聚类
     # model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
     for y in cut_list:
-        simi_res = [(x, y, model.similarity(x,y)) for x in reverse_dict if x in model and y in model and  model.similarity(x,y) > 0.8]
+        simi_res = [(x, y, model.similarity(x,y)) for x in reverse_dict if x in model and y in model and  model.similarity(x,y) > 0.6]
     for i in simi_res:
-        for j in reverse_dict[i[1]]:  # i[0]是x
+        for j in reverse_dict[i[0]]:  # i[0]是x
             if j in Res:
-                Res[j] += reverse_dict[i[1]][j] * i[2]  # 这里应该还要乘以idf，暂时没有
+                Res[j] += reverse_dict[i[0]][j] * i[2]  # 这里应该还要乘以idf，暂时没有
             else:
-                Res[j] = reverse_dict[i[1]][j] * i[2]
+                Res[j] = reverse_dict[i[0]][j] * i[2]
 
-    res_list = sorted_dict_values(Res)
+    res_list = sorted_dict_values(Res, True)
     return res_list
 
 # 由一张图的序号获得这张图的所有信息的json
@@ -210,5 +207,7 @@ def result():
 
 
 if __name__ == '__main__':
+    # 生成词表
+    thes_words, thes_dict, stop_words = init_thes()
     model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
     app.run(debug=False)
