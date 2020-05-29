@@ -5,11 +5,11 @@ from main.db import *
 import copy
 from gensim import models
 
-# 文字检索
+# 返回list
 def sorted_dict_values(a_dict, reverse=False):
-    keys = list(a_dict.keys())
-    keys.sort(reverse=reverse)
-    return [(key, a_dict[key]) for key in keys]
+    lst = sorted(a_dict.items(),key = lambda item: item[1])
+    # 先转换为lst，然后根据第二个元素排序
+    return lst
 
 
 def consult_db(session, table, field):
@@ -62,8 +62,8 @@ def pic_info(res_list):
     res_style = consult_db(session, "bqb_style", "style")
     res_topic = consult_db(session, "bqb_context", "context")
     # 生成匹配的Res
-    res = [{'name': i[0] + '.jpg',
-            'src_path': 'static/bqbSource/' + i[0] + '.jpg',
+    res = [{'name': str("{:0>4d}".format(i[0])) + '.jpg',
+            'src_path': 'static/bqbSource/' + str("{:0>4d}".format(i[0])) + '.jpg',
             'score': i[1],
             'role': [],
             'emotion': [],
@@ -105,20 +105,27 @@ def retrieve(query):
 
 def pic_retrieve():
     tmb_images = cnn_retrieve('static/query/query.jpg')
-    res_tmp = {
-        'name': '0001.jpg',
-        'src_path': 'static/bqbSource/0001.jpg',
-        'score': 78.8,
-        'description': 'it is a description',
-        'role': ['熊猫头', '黄脸'],
-        'emotion': ['开心', '愤怒'],
-        'style': ['沙雕', '睿智'],
-        'topic': ['怼人']
-    }
-    res = []
-    for i in range(5):
-        res_tmp['src_path'] = tmb_images[i]
-        res.append(copy.deepcopy(res_tmp))
+    print(tmb_images)
+    # static/cnn_test/image_database/0001.jpg'
+    #res_list = [(i[0].split('/')[3].split('.')[0],i[1]) for i in tmb_images]
+    res_list = tmb_images
+    print(res_list)
+    res = pic_info(res_list)
+    #print("检索",tmb_images)
+    # res_tmp = {
+    #     'name': '0001.jpg',
+    #     'src_path': 'static/bqbSource/0001.jpg',
+    #     'score': 78.8,
+    #     'description': 'it is a description',
+    #     'role': ['熊猫头', '黄脸'],
+    #     'emotion': ['开心', '愤怒'],
+    #     'style': ['沙雕', '睿智'],
+    #     'topic': ['怼人']
+    # }
+    # res = []
+    # for i in range(5):
+    #     res_tmp['src_path'] = tmb_images[i]
+    #     res.append(copy.deepcopy(res_tmp))
     return res
 
 
