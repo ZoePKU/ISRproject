@@ -149,6 +149,7 @@ cython_debug/
 
 # cnn模型
 app/main/retrieval/models/net_best.pth
+app/main/retrieval/models/enc.npz
 app/static/cnn_test/thumb_images/*
 app/static/cnn_test/upload_image/*
 

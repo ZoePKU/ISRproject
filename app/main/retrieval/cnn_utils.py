@@ -1,10 +1,13 @@
 import numpy as np
 import torch
-from main.retrieval.retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
+import sys
+sys.path.append('main/retrieval')
+sys.path.append('./')
+from retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
 from app import *
 
 def cnn_load_data():
-    return load_data(data_path='static/cnn_test/image_database/', batch_size=2, shuffle=False, transform='default')
+    return load_data(data_path='static/bqbSource/', batch_size=2, shuffle=False, transform='default')
 
 
 def cnn_load_model():
@@ -40,7 +43,7 @@ def cnn_retrieve(query_image_path):
     #image_paths = cnn_load_image_paths()
     length = int(image_index.size()[0])
     print(image_index.size())
-    sorted_paths = [(image_index[i].item() + 1, similarity[i]) for i in range(length)]
+    sorted_paths = [(image_index[i].item() + 1, similarity[i]) for i in range(length) if similarity[i] > 0.85]
     return sorted_paths
 
 
