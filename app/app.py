@@ -62,8 +62,8 @@ def pic_info(res_list):
     res_style = consult_db(session, "bqb_style", "style")
     res_topic = consult_db(session, "bqb_context", "context")
     # 生成匹配的Res
-    res = [{'name': str("{:0>4d}".format(i[0])) + '.jpg',
-            'src_path': 'static/bqbSource/' + str("{:0>4d}".format(i[0])) + '.jpg',
+    res = [{'name': str("{:0>4}".format(str(i[0]))) + '.jpg',
+            'src_path': 'static/bqbSource/' + str("{:0>4}".format(str(i[0]))) + '.jpg',
             'score': i[1],
             'role': [],
             'emotion': [],
