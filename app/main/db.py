@@ -1,4 +1,5 @@
-import json
+# -*- coding: utf-8 -*
+
 from sqlalchemy import create_engine  # 连接数据库的方法
 from sqlalchemy.orm import sessionmaker
 

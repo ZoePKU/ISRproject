@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*
+
 from flask import Flask, render_template, request, redirect
 from main.retrieval.cnn_utils import *
 from text.utils import *
@@ -210,4 +212,4 @@ if __name__ == '__main__':
     # 生成词表
     thes_words, thes_dict, stop_words = init_thes()
     model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
-    app.run(debug=False)
+    app.run(debug=True, host='0.0.0.0')
