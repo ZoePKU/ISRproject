@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*
-
+import os
 from flask import Flask, render_template, request, redirect
 from main.retrieval.cnn_utils import *
 from text.utils import *
 from main.db import *
-import copy
 from gensim import models
+
 
 # 返回list
 def sorted_dict_values(a_dict, reverse=False):
-    lst = sorted(a_dict.items(),key = lambda item: item[1], reverse=reverse)
+    lst = sorted(a_dict.items(), key=lambda item: item[1], reverse=reverse)
     # 先转换为lst，然后根据第二个元素排序
     return lst
 
@@ -19,6 +19,7 @@ def consult_db(session, table, field):
     cursor_gen = session.execute(sql_gen)
     res = cursor_gen.fetchall()  # 这是bqb描述
     return res
+
 
 def text_retrieve(query):
     # 得到分词的列表
@@ -39,7 +40,8 @@ def text_retrieve(query):
     # 暂时没有聚类
     # model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
     for y in cut_list:
-        simi_res = [(x, y, model.similarity(x,y)) for x in reverse_dict if x in model and y in model and  model.similarity(x,y) > 0.6]
+        simi_res = [(x, y, model.similarity(x, y)) for x in reverse_dict if
+                    x in model and y in model and model.similarity(x, y) > 0.6]
     for i in simi_res:
         for j in reverse_dict[i[0]]:  # i[0]是x
             if j in Res:
@@ -49,6 +51,7 @@ def text_retrieve(query):
 
     res_list = sorted_dict_values(Res, True)
     return res_list
+
 
 # 由一张图的序号获得这张图的所有信息的json
 def pic_info(res_list):
@@ -62,7 +65,8 @@ def pic_info(res_list):
     res_topic = consult_db(session, "bqb_context", "context")
     # 生成匹配的Res
     res = [{'name': str("{:0>4}".format(str(i[0]))) + '.jpg',
-            'src_path': 'static/bqbSource/' + str("{:0>4}".format(str(i[0]))) + '.jpg',
+            'src_path': 'static/bqbSource/' + str(
+                "{:0>4}".format(str(i[0]))) + '.jpg',
             'score': i[1],
             'role': [],
             'emotion': [],
@@ -96,7 +100,6 @@ def pic_info(res_list):
 
 # 这里是单独的文字检索
 def retrieve(query):
-
     res_list = text_retrieve(query)
     res = pic_info(res_list)
     return res
@@ -106,40 +109,24 @@ def pic_retrieve():
     tmb_images = cnn_retrieve('static/query/query.jpg')
     print(tmb_images)
     # static/cnn_test/image_database/0001.jpg'
-    #res_list = [(i[0].split('/')[3].split('.')[0],i[1]) for i in tmb_images]
+    # res_list = [(i[0].split('/')[3].split('.')[0],i[1]) for i in tmb_images]
     res_list = tmb_images
     print(res_list)
     res = pic_info(res_list)
-    #print("检索",tmb_images)
-    # res_tmp = {
-    #     'name': '0001.jpg',
-    #     'src_path': 'static/bqbSource/0001.jpg',
-    #     'score': 78.8,
-    #     'description': 'it is a description',
-    #     'role': ['熊猫头', '黄脸'],
-    #     'emotion': ['开心', '愤怒'],
-    #     'style': ['沙雕', '睿智'],
-    #     'topic': ['怼人']
-    # }
-    # res = []
-    # for i in range(5):
-    #     res_tmp['src_path'] = tmb_images[i]
-    #     res.append(copy.deepcopy(res_tmp))
     return res
 
 
 def mix_retrieve(query_text):
-    tmb_images = cnn_text_retrieve('static/query/query.jpg',query_text)
+    tmb_images = cnn_text_retrieve('static/query/query.jpg', query_text)
     res = pic_info(tmb_images)
     return res
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(24)
 
 
 # 下面是flask的路由部分
-
-
 @app.route('/')
 def root():
     return redirect('index')
@@ -166,6 +153,7 @@ def result():
         print("混合检索方式")
         query_text = form.get("query_text")
         res = mix_retrieve(query_text)
+        # g['res'] = res
         return render_template('search_result.html',
                                success=True,
                                query_mode=3,
@@ -180,6 +168,7 @@ def result():
         query_image.save('static/query/query.jpg')
         print(query_image.filename)
         res = pic_retrieve()
+        # session['res'] = res
         return render_template('search_result.html',
                                success=True,
                                query_mode=2,
@@ -192,6 +181,7 @@ def result():
         query_text = form.get("query_text")
         print(query_text)
         res = retrieve(query_text)
+        # session['res'] = res
         return render_template('search_result.html',
                                success=True,
                                query_mode=1,
@@ -208,8 +198,10 @@ def result():
                                length=0)
 
 
+# 生成词表
+thes_words, thes_dict, stop_words = init_thes()
+model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
+
+
 if __name__ == '__main__':
-    # 生成词表
-    thes_words, thes_dict, stop_words = init_thes()
-    model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=False, host='0.0.0.0')
