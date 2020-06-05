@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 import os
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from main.retrieval.cnn_utils import *
 from text.utils import *
 from main.db import *
@@ -14,9 +14,9 @@ def sorted_dict_values(a_dict, reverse=False):
     return lst
 
 
-def consult_db(session, table, field):
+def consult_db(db_session, table, field):
     sql_gen = "select name," + field + " from " + table
-    cursor_gen = session.execute(sql_gen)
+    cursor_gen = db_session.execute(sql_gen)
     res = cursor_gen.fetchall()  # 这是bqb描述
     return res
 
@@ -56,13 +56,13 @@ def text_retrieve(query):
 # 由一张图的序号获得这张图的所有信息的json
 def pic_info(res_list):
     # 连接数据库
-    session = connect_db("129.211.91.153:3306", "isrbqb", 'admin', 'abcd')
+    db_session = connect_db("129.211.91.153:3306", "isrbqb", 'admin', 'abcd')
     # 查出所有的description,role,emotion,style,topic
-    res_description = consult_db(session, "bqb_description", "geng")
-    res_role = consult_db(session, "bqb_role", "role")
-    res_emotion = consult_db(session, "bqb_emotion", "emotion")
-    res_style = consult_db(session, "bqb_style", "style")
-    res_topic = consult_db(session, "bqb_context", "context")
+    res_description = consult_db(db_session, "bqb_description", "geng")
+    res_role = consult_db(db_session, "bqb_role", "role")
+    res_emotion = consult_db(db_session, "bqb_emotion", "emotion")
+    res_style = consult_db(db_session, "bqb_style", "style")
+    res_topic = consult_db(db_session, "bqb_context", "context")
     # 生成匹配的Res
     res = [{'name': str("{:0>4}".format(str(i[0]))) + '.jpg',
             'src_path': 'static/bqbSource/' + str(
@@ -122,6 +122,54 @@ def mix_retrieve(query_text):
     return res
 
 
+def in_filter(pic_item, filter_dict):
+    """
+    检查一个图片是否符合特征过滤器
+    @param pic_item: 检查的图片（字典）
+    @param filter_dict: 过滤器（字典）
+    @return: 是否符合
+    """
+    feature_list = ['role', 'emotion', 'style', 'topic']
+    feature_flag = {k: False for k in feature_list if
+                    filter_dict[k]}  # 过滤器中存在项目的特征才检查
+    for feature_item in feature_list:  # 依次查看每一个特征
+        for feature in pic_item[feature_item]:
+            if feature in filter_dict[feature_item]:
+                feature_flag[feature_item] = True  # 只要有一个值是符合的，那么该特征检查通过
+    # 所有特征都通过的才行
+    for flag_item in feature_flag.values():
+        if not flag_item:  # 有一个检查没通过就不行
+            return False
+    return True
+
+
+def res_from_session(page=1, filter_dict={}):
+    """
+    从session读取上一次检索的结果，并使用过滤器进行筛选
+    @param page: 查看第几页，每页20个
+    @param filter_dict: 过滤器字典
+    @return: 结果图片列表
+    """
+    tmp_res = [item_res for item_res in session['last_res']['data'] if
+               in_filter(item_res, filter_dict)]
+    tmp_res = tmp_res[(page - 1) * 20:page * 20]
+    return tmp_res
+
+
+def res_browse(page=1, filter_dict={}):
+    """
+    不检索情况下浏览
+    @param page: 查看的页数
+    @param filter_dict: 筛选器的字典
+    @return:
+    """
+    all_pic_no_list = list(range(4000))
+    all_pic_list = pic_info(all_pic_no_list)
+    tmp_res = [item_res for item_res in all_pic_list if in_filter(item_res, filter_dict)]
+    tmp_res = tmp_res[(page - 1) * 20:page * 20]
+    return tmp_res
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 
@@ -140,68 +188,97 @@ def index():
 
 @app.route('/result', methods=['GET', 'POST'])
 def result():
-    files = request.files
-    form = request.form
-    query_mode_flag = 0
-    if form.get("query_text"):
-        query_mode_flag += 1
-    if files and files['query_img'] and files['query_img'].filename:
-        query_mode_flag += 2
+    if request.method == 'POST':
+        files = request.files
+        form = request.form
+        query_mode_flag = 0
+        if form.get("query_text"):
+            query_mode_flag += 1
+        if files and files['query_img'] and files['query_img'].filename:
+            query_mode_flag += 2
 
-    # 接收到index页面的检索请求，图文都有
-    if query_mode_flag == 3:
-        print("混合检索方式")
-        query_text = form.get("query_text")
-        res = mix_retrieve(query_text)
-        # g['res'] = res
-        return render_template('search_result.html',
-                               success=True,
-                               query_mode=3,
-                               query_info='query/query.jpg',
-                               length=len(res),
-                               data=res)
+        # 接收到index页面的检索请求，图文都有
+        if query_mode_flag == 3:
+            print("混合检索方式")
+            query_text = form.get("query_text")
+            res = mix_retrieve(query_text)
+            session['last_res'] = {}
+            session['last_res']['query_mode'] = 3
+            session['last_res']['query_info'] = query/query.jpg
+            session['last_res']['data'] = res
+            return render_template('search_result.html',
+                                   success=True,
+                                   query_mode=3,
+                                   query_info='query/query.jpg',
+                                   length=len(res),
+                                   data=res)
 
-    # 接收到index页面的检索请求，带图片请求，调用图片检索
-    elif query_mode_flag == 2:
-        print("图片检索方式")
-        query_image = files['query_img']
-        query_image.save('static/query/query.jpg')
-        print(query_image.filename)
-        res = pic_retrieve()
-        # session['res'] = res
-        return render_template('search_result.html',
-                               success=True,
-                               query_mode=2,
-                               query_info='query/query.jpg',
-                               length=len(res),
-                               data=res)
-    # 接收到index页面的检索请求，没有图片的请求，返回文字检索的结果
-    elif query_mode_flag == 1:
-        print("文字检索方式")
-        query_text = form.get("query_text")
-        print(query_text)
-        res = retrieve(query_text)
-        # session['res'] = res
-        return render_template('search_result.html',
-                               success=True,
-                               query_mode=1,
-                               query_info=query_text,
-                               length=len(res),
-                               data=res)
-    # 结果页面的展示，既没有图片也没有文字，返回空白的页面,这里目前是不返回图片
-    else:
-        print("屁都不是")
-        return render_template('search_result.html',
-                               success=True,
-                               query_mode=0,
-                               query_info='',
-                               length=0)
+        # 接收到index页面的检索请求，带图片请求，调用图片检索
+        elif query_mode_flag == 2:
+            print("图片检索方式")
+            query_image = files['query_img']
+            query_image.save('static/query/query.jpg')
+            print(query_image.filename)
+            res = pic_retrieve()
+            session['last_res'] = {}
+            session['last_res']['query_mode'] = 2
+            session['last_res']['query_info'] = 'query/query.jpg'
+            session['last_res']['data'] = res
+            return render_template('search_result.html',
+                                   success=True,
+                                   query_mode=2,
+                                   query_info='query/query.jpg',
+                                   length=len(res),
+                                   data=res)
+        # 接收到index页面的检索请求，没有图片的请求，返回文字检索的结果
+        elif query_mode_flag == 1:
+            print("文字检索方式")
+            query_text = form.get("query_text")
+            print(query_text)
+            res = retrieve(query_text)
+            session['last_res'] = {}
+            session['last_res']['query_mode'] = 1
+            session['last_res']['query_info'] = query_text
+            session['last_res']['data'] = 1
+            return render_template('search_result.html',
+                                   success=True,
+                                   query_mode=1,
+                                   query_info=query_text,
+                                   length=len(res),
+                                   data=res)
+
+    elif request.method == 'GET':
+        get_type = request.args.get('get_type')
+        if get_type == 'filter':
+            print("筛选请求")
+            filter_dict = request.args.get('filter')
+            page = request.args.get('page')
+            return render_template('search_result.html',
+                                   success=True,
+                                   query_mode=session['last_res']['query_mode'],
+                                   query_info=session['last_res']['query_info'],
+                                   page=page,
+                                   data=res_from_session(page,
+                                                         filter_dict=filter_dict))
+        else:
+            filter_dict = request.args.get('filter')
+            page = request.args.get('page')
+            print("浏览")
+            session['last_status'] = 0
+            session['last_res'] = {}
+            return render_template('search_result.html',
+                                   success=True,
+                                   query_mode=0,
+                                   query_info='',
+                                   data=res_browse(page,
+                                                   filter_dict=filter_dict),
+                                   length=0)
 
 
 # 生成词表
 thes_words, thes_dict, stop_words = init_thes()
-model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
-
+model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin',
+                                                 binary=True)
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')

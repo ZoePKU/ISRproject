@@ -5,7 +5,7 @@ import torch
 import sys
 sys.path.append('main/retrieval')
 sys.path.append('./')
-from retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
+from cnn_retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
 from app import *
 
 def cnn_load_data():
