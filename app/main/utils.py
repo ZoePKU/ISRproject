@@ -7,6 +7,41 @@ def pic_info(res_list):
     @param res_list: 数字列表
     @return: 结果列表
     """
+    # 下面是debug的时候加的
+    # res = [
+    #     {
+    #         'name': '0001.jpg',
+    #         'src_path': 'static/bqbSource/0001.jpg',
+    #         'score': 78.8,
+    #         'description': 'it is a description',
+    #         'role': ['熊猫头', '黄脸'],
+    #         'emotion': ['开心', '愤怒'],
+    #         'style': ['沙雕', '睿智'],
+    #         'topic': ['怼人']
+    #     },
+    #     {
+    #         'name': '0002.jpg',
+    #         'src_path': 'static/bqbSource/0002.jpg',
+    #         'score': 71.8,
+    #         'description': 'it is a description',
+    #         'role': ['熊猫头', '黄脸'],
+    #         'emotion': ['开心', '愤怒'],
+    #         'style': ['沙雕', '睿智'],
+    #         'topic': ['怼人']
+    #     },
+    #     {
+    #         'name': '0003.jpg',
+    #         'src_path': 'static/bqbSource/0003.jpg',
+    #         'score': 68.8,
+    #         'description': 'it is a description',
+    #         'role': ['熊猫头', '黄脸'],
+    #         'emotion': ['开心', '愤怒'],
+    #         'style': ['沙雕', '睿智'],
+    #         'topic': ['怼人']
+    #     }
+    # ]
+    # return res
+
     # 连接数据库
     db_session = connect_db("129.211.91.153:3306", "isrbqb", 'admin', 'abcd')
     # 查出所有的description,role,emotion,style,topic
@@ -58,9 +93,8 @@ def in_filter(pic_item, filter_dict):
     @return: 是否符合
     """
     feature_list = ['role', 'emotion', 'style', 'topic']
-    feature_flag = {k: False for k in feature_list if
-                    filter_dict[k]}  # 过滤器中存在项目的特征才检查
-    for feature_item in feature_list:  # 依次查看每一个特征
+    feature_flag = {k: False for k in feature_list if k in filter_dict}  # 过滤器中存在项目的特征才检查
+    for feature_item in feature_flag:  # 依次查看每一个特征
         for feature in pic_item[feature_item]:
             if feature in filter_dict[feature_item]:
                 feature_flag[feature_item] = True  # 只要有一个值是符合的，那么该特征检查通过

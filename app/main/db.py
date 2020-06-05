@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 
 from sqlalchemy import create_engine  # 连接数据库的方法
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 
 def connect_db(host, db, user, pwd):
@@ -16,9 +16,11 @@ def connect_db(host, db, user, pwd):
                                                                       DATABASE)  # 连接数据库的uri# mysql+pymysql://{用户名}:{密码}@{host}:{port}/{数据库}?charset=utf8
     engine = create_engine(Db_Uri)  # 连接数据库
     # 创建会话
-    Session = sessionmaker(bind=engine)
+    session_factory = sessionmaker(bind=engine)
+    Session = scoped_session(session_factory)
+    # Session = sessionmaker(bind=engine)
     session = Session()
-    print("数据库创建成功")
+    print("数据库ORM创建成功")
     return session
 
 

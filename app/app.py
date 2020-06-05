@@ -37,8 +37,7 @@ def res_from_session(page=1, filter_dict={}):
     @param filter_dict: 过滤器字典
     @return: 结果图片列表
     """
-    tmp_res = [item_res for item_res in session['last_res']['data'] if
-               in_filter(item_res, filter_dict)]
+    tmp_res = [item_res for item_res in session['last_res']['data'] if in_filter(item_res, filter_dict)]
     tmp_res = tmp_res[(page - 1) * 20:page * 20]
     return tmp_res
 
@@ -150,7 +149,7 @@ def result():
             res = retrieve(query_text)
             total_length = len(res)
             part_res = page_filter(res)
-            session.clear()
+            session['last_res'] = {}
             session['last_res']['query_mode'] = 1
             session['last_res']['query_info'] = query_text
             session['last_res']['total_length'] = total_length
@@ -171,17 +170,19 @@ def result():
             filter_dict_str = request.args.get('filter')
             if filter_dict_str:
                 filter_dict = eval(filter_dict_str)
-            page = request.args.get('page')
+            page = eval(request.args.get('page'))
+            res = res_from_session(page, filter_dict=filter_dict)
             return render_template('search_result.html',
                                    success=True,
                                    query_mode=session['last_res']['query_mode'],
                                    query_info=session['last_res']['query_info'],
                                    total_length=session['last_res']['total_length'],
                                    page=page,
-                                   data=res_from_session(page, filter_dict=filter_dict))
+                                   length=len(res),
+                                   data=res)
         elif get_mode == 'browse':
             filter_dict = eval(request.args.get('filter'))
-            page = request.args.get('page')
+            page = eval(request.args.get('page'))
             print("浏览")
             session['last_status'] = 0
             session['last_res'] = {}
@@ -192,7 +193,7 @@ def result():
                                    query_info='',
                                    total_length=total_len,
                                    data=res,
-                                   length=0)
+                                   length=len(res))
         else:
             print("啥都不干")
             return render_template('search_result.html',
