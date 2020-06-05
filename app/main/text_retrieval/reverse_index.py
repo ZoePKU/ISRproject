@@ -1,8 +1,5 @@
-import jieba
-import openpyxl
 from collections import Counter
-import json
-from text.utils import *
+from main.text_retrieval.utils import *
 
 def description_parse(dict,thes_words,thes_dict, stop_words):
     cut_dict = {}
@@ -57,5 +54,5 @@ if __name__ == '__main__':
     # index_json = json.dumps(reverse_index, sort_keys=True, ensure_ascii=False, indent=4)
     # 输出到文件
     output('text/reverse_index.json', reverse_index)
-    load_dict = input('text/reverse_index.json')
+    load_dict = json_input('text/reverse_index.json')
     # print(load_dict)

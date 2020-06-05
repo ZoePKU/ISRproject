@@ -151,13 +151,11 @@ dmypy.json
 cython_debug/
 
 # cnn模型
-app/main/retrieval/models/net_best.pth
-app/main/retrieval/models/enc.npz
-app/static/cnn_test/thumb_images/*
-app/static/cnn_test/upload_image/*
+app/main/cnn_retrieval/models/net_best.pth
+app/main/cnn_retrieval/models/enc.npz
 
 # 检索图片
 app/static/query/query.jpg
 
 #w2v
-app/word2vec_779845.bin
+app/main/text_retrieval/word2vec.bin
