@@ -53,12 +53,27 @@ def res_browse(page=1, filter_dict={}):
     all_pic_no_list = list(range(4000))
     all_pic_list = pic_info(all_pic_no_list)
     tmp_res = [item_res for item_res in all_pic_list if in_filter(item_res, filter_dict)]
+    total_len = len(tmp_res)
     tmp_res = tmp_res[(page - 1) * 20:page * 20]
+    return tmp_res, total_len
+
+
+def page_filter(res, page=1):
+    """
+    筛选页数
+    @param res: 待筛选的查询结果的列表
+    @param page: 待筛选的页数
+    @return:
+    """
+    if len(res) > 20:
+        tmp_res = res[(page - 1) * 20:page * 20]
+    else:
+        tmp_res = res
     return tmp_res
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = 'A0Zr98j/3yXR~XHH!jmN]LWX/,?RT'
 
 
 # 下面是flask的路由部分
@@ -88,17 +103,22 @@ def result():
         if query_mode_flag == 3:
             print("混合检索方式")
             query_text = form.get("query_text")
+            print("检索词为：" + query_text)
             res = mix_retrieve(query_text)
+            total_length = len(res)
+            part_res = page_filter(res)
             session['last_res'] = {}
             session['last_res']['query_mode'] = 3
             session['last_res']['query_info'] = 'query/query.jpg'
+            session['last_res']['total_length'] = total_length
             session['last_res']['data'] = res
             return render_template('search_result.html',
                                    success=True,
                                    query_mode=3,
                                    query_info='query/query.jpg',
-                                   length=len(res),
-                                   data=res)
+                                   length=len(part_res),
+                                   total_length=total_length,
+                                   data=part_res)
 
         # 接收到index页面的检索请求，带图片请求，调用图片检索
         elif query_mode_flag == 2:
@@ -107,65 +127,96 @@ def result():
             query_image.save('static/query/query.jpg')
             print(query_image.filename)
             res = pic_retrieve()
+            total_length = len(res)
+            part_res = page_filter(res)
             session['last_res'] = {}
             session['last_res']['query_mode'] = 2
             session['last_res']['query_info'] = 'query/query.jpg'
+            session['last_res']['total_length'] = total_length
             session['last_res']['data'] = res
             return render_template('search_result.html',
                                    success=True,
                                    query_mode=2,
                                    query_info='query/query.jpg',
-                                   length=len(res),
-                                   data=res)
+                                   length=len(part_res),
+                                   total_length=total_length,
+                                   data=part_res)
+
         # 接收到index页面的检索请求，没有图片的请求，返回文字检索的结果
         elif query_mode_flag == 1:
-            print("文字检索方式")
+            print("文字检索")
             query_text = form.get("query_text")
             print("检索词为：" + query_text)
             res = retrieve(query_text)
-            session['last_res'] = {}
+            total_length = len(res)
+            part_res = page_filter(res)
+            session.clear()
             session['last_res']['query_mode'] = 1
             session['last_res']['query_info'] = query_text
-            session['last_res']['data'] = 1
+            session['last_res']['total_length'] = total_length
+            session['last_res']['data'] = res
             return render_template('search_result.html',
                                    success=True,
                                    query_mode=1,
                                    query_info=query_text,
-                                   length=len(res),
-                                   data=res)
+                                   length=len(part_res),
+                                   total_length=total_length,
+                                   data=part_res)
 
     elif request.method == 'GET':
-        get_type = request.args.get('get_type')
-        if get_type == 'filter':
+        get_mode = request.args.get('get_mode')
+        if get_mode == 'filter':
             print("筛选请求")
-            filter_dict = request.args.get('filter')
+            filter_dict = {}
+            filter_dict_str = request.args.get('filter')
+            if filter_dict_str:
+                filter_dict = eval(filter_dict_str)
             page = request.args.get('page')
             return render_template('search_result.html',
                                    success=True,
                                    query_mode=session['last_res']['query_mode'],
                                    query_info=session['last_res']['query_info'],
+                                   total_length=session['last_res']['total_length'],
                                    page=page,
-                                   data=res_from_session(page,
-                                                         filter_dict=filter_dict))
-        elif get_type == 'filter':
-            filter_dict = request.args.get('filter')
+                                   data=res_from_session(page, filter_dict=filter_dict))
+        elif get_mode == 'browse':
+            filter_dict = eval(request.args.get('filter'))
             page = request.args.get('page')
             print("浏览")
             session['last_status'] = 0
             session['last_res'] = {}
+            res, total_len = res_browse(page, filter_dict=filter_dict)
+            return render_template('search_result.html',
+                                   success=True,
+                                   query_mode=4,
+                                   query_info='',
+                                   total_length=total_len,
+                                   data=res,
+                                   length=0)
+        else:
+            print("啥都不干")
             return render_template('search_result.html',
                                    success=True,
                                    query_mode=0,
                                    query_info='',
-                                   data=res_browse(page, filter_dict=filter_dict),
+                                   total_length=0,
+                                   data={},
                                    length=0)
-        else:
-            return render_template('search_result.html',
-                                          success=True,
-                                          query_mode=0,
-                                          query_info='',
-                                          data={},
-                                          length=0)
+
+
+# 下面是一个session测试
+# @app.route('/test', methods=['GET', 'POST'])
+# def rest():
+#     form = request.form
+#     if request.method == 'POST':
+#         session['name'] = form.get('name')
+#         return 'name is ' + session['name'] + '<form method="post" action="/test"><input type="text" name="name"/><button type="submit">提交</button></form>'
+#     else:
+#         if 'name' in session:
+#             return 'name is ' + session['name'] + '<form method="post" action="/test"><input type="text" name="name"/><button type="submit">提交</button></form>'
+#         else:
+#             return 'name not know ' + '<form method="post" action="/test"><input type="text" name="name"/><button type="submit">提交</button></form>'
+
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')

@@ -116,7 +116,7 @@ $ venv\Scripts\activate
 
 # =============依赖库安装完毕==============
 
-# 安装完之后就可以启动项目了，先进入app路径，必须这么做，否则路径出错
+# 安装完之后就可以启动项目了，先进入app路径[必须这么做，否则路径出错]
 (venv) $ cd app
 # 运行 app.py 启动服务器
 (venv) $ python app.py
@@ -133,7 +133,7 @@ $ venv\Scripts\activate
 # 浏览器输入 http://127.0.0.1:5000 就可以访问项目了
 ```
 
-另外，CNN的模型比较大，不放git了，[在这个链接](https://lanzous.com/icpnpsd)下载后解压，把`net_best.pth`放入`app/main/retrieval/models/`这个文件夹。
+另外，CNN的模型比较大，不放git了，[在这个链接](https://lanzous.com/icpnpsd)下载后解压，把`net_best.pth`放入`app/main/cnn_retrieval/models/`这个文件夹。
 
 
 
