@@ -150,6 +150,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# cnn test
+app/static/cnn_test
+
 # cnn模型
 app/main/cnn_retrieval/models/net_best.pth
 app/main/cnn_retrieval/models/enc.npz
