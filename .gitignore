@@ -160,5 +160,11 @@ app/main/cnn_retrieval/models/enc.npz
 # 检索图片
 app/static/query/query.jpg
 
-#w2v
+# w2v
 app/main/text_retrieval/word2vec.bin
+
+# uwsgi
+.htaccess
+.user.ini
+uwsgi.ini
+uwsgi.pid
