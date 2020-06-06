@@ -31,8 +31,8 @@ def create_stopword(filename):
 
 
 def init_thes():
-    thes_words, thes_dict = create_thes('text/thesaurus.xlsx')
-    stop_words = create_stopword('text/stop_words.txt')
+    thes_words, thes_dict = create_thes('main/text_retrieval/thesaurus.xlsx')
+    stop_words = create_stopword('main/text_retrieval/stop_words.txt')
     return thes_words, thes_dict, stop_words
 
 
@@ -58,7 +58,7 @@ def output(filename, content):
 
 
 # 读入json,返回dict
-def input(filename):
+def json_input(filename):
     with open(filename, "r", encoding="utf-8") as f:
         load_dict = json.load(f)
         return load_dict

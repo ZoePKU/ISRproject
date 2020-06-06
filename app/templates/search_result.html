@@ -51,12 +51,12 @@
             <button class="button" type="submit">搜索</button>
             <a href="#"><u>首页</u></a>
         </div>
-        
+
         {#图片上传#}
         <div id="image_search" style="border: 1px solid #DBDBDB; display:none;margin-top:30px;width:700px;height:600px;" >
         <p class="image_search_font">按图片搜索</p>
         <input type="button" class="close_icon" onClick="hide_2();" style="background: url(../static/index/images/close.svg);width:16px;height:16px;"/>
-        
+
         <button class="button_2" type="submit">上传图片</button>
         <input type="text" class="input_2" placeholder="选择图片路径"/>
         <p class="image_search_font">预览：</p>
@@ -64,7 +64,7 @@
             <img src="#" id="imgs" onload="adapt();"/>
         </div>
          <button class="button_3" type="submit">取消上传</button>
-         
+
         </div>
 
         {#筛选区域#}
@@ -113,6 +113,32 @@
     <div style="font-size: 13px;line-height: 2em;margin-top:30px;margin-bottom: 30px">
         © Copyright ISR BQB ®<br>
         Please contact us through zdq
+    </div>
+    <script>
+        function jump_page_test () {
+            alert("jump1");
+            window.location.href = '/result?page=1&get_mode=filter';
+        }
+
+        function jump_filter_test () {
+            alert("filter");
+            let feature_filter = {
+                "role":["熊猫头","黄脸"],
+                "emotion":["开心"]
+            }
+            window.location.href = '/result?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter);
+            // result?page=1&get_mode=filter&filter={'role':['熊猫头','黄脸'],'emotion':['开心']}
+        }
+
+        function jump_browse_test () {
+            alert("browse");
+            window.location.href = '/result?page=2&get_mode=browse&filter={"role":["熊猫头","黄脸"]}';
+        }
+    </script>
+    <div>
+        <button onclick="jump_page_test()">筛选出第二页</button>
+        <button onclick="jump_filter_test()">筛选熊猫头</button>
+        <button onclick="jump_page_test()">浏览第一页熊猫头</button>
     </div>
 </center>
 

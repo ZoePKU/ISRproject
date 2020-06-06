@@ -1,14 +1,19 @@
+# -*- coding: utf-8 -*
+import sys
+sys.path.append('main/cnn_retrieval')
+sys.path.append('./')
 import numpy as np
 import torch
-from main.retrieval.retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
-from app import *
+from cnn_retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
+from main.text_retrieval.retrieval import text_retrieve
+from main.utils import sorted_dict_values
 
 def cnn_load_data():
-    return load_data(data_path='static/cnn_test/image_database/', batch_size=2, shuffle=False, transform='default')
+    return load_data(data_path='static/bqbSource/', batch_size=2, shuffle=False, transform='default')
 
 
 def cnn_load_model():
-    return load_model(pretrained_model='main/retrieval/models/net_best.pth', use_gpu=True)
+    return load_model(pretrained_model='main/cnn_retrieval/models/net_best.pth', use_gpu=True)
 
 
 def cnn_build_feature():
@@ -16,7 +21,7 @@ def cnn_build_feature():
     model = cnn_load_model()
     gallery_feature, image_paths = extract_feature(model=model, dataloaders=data_loader)
     enc = gallery_feature.detach().cpu().numpy()
-    np.savez("main/retrieval/models/enc.npz", enc=enc)
+    np.savez("main/cnn_retrieval/models/enc.npz", enc=enc)
     print("===图片库特征提取并保存===")
     return gallery_feature
 
@@ -29,7 +34,7 @@ def cnn_load_image_paths():
 
 
 def cnn_load_feature():
-    feat = np.load("main/retrieval/models/enc.npz")
+    feat = np.load("main/cnn_retrieval/models/enc.npz")
     return torch.tensor(feat['enc'])
 
 
@@ -40,7 +45,7 @@ def cnn_retrieve(query_image_path):
     #image_paths = cnn_load_image_paths()
     length = int(image_index.size()[0])
     print(image_index.size())
-    sorted_paths = [(image_index[i].item() + 1, similarity[i]) for i in range(length)]
+    sorted_paths = [(image_index[i].item() + 1, similarity[i]) for i in range(length) if similarity[i] > 0.85]
     return sorted_paths
 
 

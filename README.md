@@ -3,8 +3,68 @@
 信息存储与检索课程 检索项目实验
 
 
+## 最后一次完善 2020-0604
 
-## 2020-0517
+#### 上次工作总结
+
+- 基本完成了图像检索和文本检索
+- 还需要完善前端分页功能
+
+#### 新的工作
+
+使用flask的session来存储最近一次的检索结果，方便分页的二次请求，下面是session中存储的结构：
+
+```python
+session['last_state'] = 2 # 0 啥都没查 1 文本检索 2 图像检索 3 混合检索
+session['last_res'] = {
+  'query_mode': 2,
+  'query_info': 'query/query.jpg',
+  'length': 2,
+  'page': 1,
+  'data': [
+    {
+      'name': '0001.jpg',
+      'src_path': 'static/bqbSource/0001.jpg',
+      'score': 78.8,
+      'description': 'it is a description',
+      'role': ['熊猫头', '黄脸'],
+      'emotion': ['开心', '愤怒'],
+      'style': ['沙雕', '睿智'],
+      'topic': ['怼人']
+    },
+    {
+      'name': '0002.jpg',
+      'src_path': 'static/bqbSource/0002.jpg',
+      'score': 71.2,
+      'description': 'it is a description',
+      'role': ['熊猫头', '黄脸'],
+      'emotion': ['开心', '愤怒'],
+      'style': ['沙雕', '睿智'],
+      'topic': ['怼人']
+    },
+  ]
+}
+```
+对result的请求有以下情况
+
+- 带图片的检索（包括图片和混合）POST请求传送图片
+  - session标志改为已有图片/混合请求
+  - 在session存储结果
+- 文字检索检索 GET请求
+  - session标志改为已有文字请求
+  - 在session存储结果
+- 分类浏览页面 GET请求
+  - session标志改为没有检索
+  - 无筛选
+  - 有筛选
+- 后处理 GET请求
+  - session标志不改变
+  - 分页
+  - 筛选
+
+
+
+## 基本模块的制作 2020-0517
 
 ### 上次工作总结
 
@@ -24,7 +84,7 @@
 
 ```bash
 # 以下是命令行操作，命令为美元符$后面的语句
-# 井号是注释，macOS同学一定要注意python2和python3的问题，一般来说所有pip都应该改成pip3
+# 井号是注释，macOS同学一定要注意python2和python3的问题，一般来说所有pip都应该改成pip3，但是进入virtualenv虚拟环境后应当一律使用pip
 
 # 安装 virtualenv 库（虚拟环境），如果你没有安装过的话
 $ pip install virtualenv
@@ -43,13 +103,20 @@ $ venv\Scripts\activate
 # 激活成功后你的命令行会变成
 (venv) $ xxxxx
 
-# =============下面配环境
+# =============下面安装依赖库==============
 
-# 安装所有依赖库（有虚拟环境后macOS同学可以不用写pip3了）
+# 安装所有依赖库（有虚拟环境后macOS同学可以不要用pip3了，用pip）
 (venv) $ pip install -r requirements.txt
-# 这里花时间可能会很长，建议翻墙（torch模块不翻墙很可能装不上）
+# requirements里面不包括torch，需要单独安装(注意仍然要在虚拟环境下安装)
+# windows系统
+(venv) $ pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+# macOS系统
+(venv) $ pip install torch torchvision
+# PyTorch 安装时间可能比较长，需耐心等待。
 
-# 安装完之后就可以启动项目了，先进入app路径，必须这么做，否则路径出错
+# =============依赖库安装完毕==============
+
+# 安装完之后就可以启动项目了，先进入app路径[必须这么做，否则路径出错]
 (venv) $ cd app
 # 运行 app.py 启动服务器
 (venv) $ python app.py
@@ -59,14 +126,14 @@ $ venv\Scripts\activate
    WARNING: This is a development server. Do not use it in a production deployment.
    Use a production WSGI server instead.
  * Debug mode: on
- * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 311-217-084
-# 浏览器输入 http://127.0.0.1:8080 就可以访问项目了
+# 浏览器输入 http://127.0.0.1:5000 就可以访问项目了
 ```
 
-另外，CNN的模型比较大，不放git了，[在这个链接](https://lanzous.com/icpnpsd)下载后解压，把`net_best.pth`放入`app/main/retrieval/models/`这个文件夹。
+另外，CNN的模型比较大，不放git了，[在这个链接](https://lanzous.com/icpnpsd)下载后解压，把`net_best.pth`放入`app/main/cnn_retrieval/models/`这个文件夹。
 
 
 

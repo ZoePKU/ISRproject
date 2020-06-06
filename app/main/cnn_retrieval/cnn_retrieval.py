@@ -2,7 +2,6 @@
 
 from __future__ import print_function, division
 
-import argparse
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
