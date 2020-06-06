@@ -12,9 +12,9 @@ def sorted_dict_values(a_dict, reverse=False):
     return lst
 
 
-def consult_db(session, table, field):
+def consult_db(cursor, table, field):
     sql_gen = "select name," + field + " from " + table
-    cursor_gen = session.execute(sql_gen)
+    cursor_gen = cursor.execute(sql_gen)
     res = cursor_gen.fetchall()  # 这是bqb描述
     return res
 
@@ -54,13 +54,13 @@ def text_retrieve(query):
 # 由一张图的序号获得这张图的所有信息的json
 def pic_info(res_list):
     # 连接数据库
-    session = connect_db("129.211.91.153:3306", "isrbqb", 'admin', 'abcd')
+    cursor = connect_db("129.211.91.153", "3306", "isrbqb", 'admin', 'abcd')
     # 查出所有的description,role,emotion,style,topic
-    res_description = consult_db(session, "bqb_description", "geng")
-    res_role = consult_db(session, "bqb_role", "role")
-    res_emotion = consult_db(session, "bqb_emotion", "emotion")
-    res_style = consult_db(session, "bqb_style", "style")
-    res_topic = consult_db(session, "bqb_context", "context")
+    res_description = consult_db(cursor, "bqb_description", "geng")
+    res_role = consult_db(cursor, "bqb_role", "role")
+    res_emotion = consult_db(cursor, "bqb_emotion", "emotion")
+    res_style = consult_db(cursor, "bqb_style", "style")
+    res_topic = consult_db(cursor, "bqb_context", "context")
     # 生成匹配的Res
     res = [{'name': str("{:0>4}".format(str(i[0]))) + '.jpg',
             'src_path': 'static/bqbSource/' + str("{:0>4}".format(str(i[0]))) + '.jpg',
