@@ -1,3 +1,5 @@
+import os
+import json
 from main.db import consult_db, connect_db
 
 
@@ -43,13 +45,14 @@ def pic_info(res_list):
     # return res
 
     # 连接数据库
-    db_session = connect_db("129.211.91.153:3306", "isrbqb", 'admin', 'abcd')
+    db_cursor = connect_db("129.211.91.153", 3306, "isrbqb", 'admin', 'abcd')
     # 查出所有的description,role,emotion,style,topic
-    res_description = consult_db(db_session, "bqb_description", "geng")
-    res_role = consult_db(db_session, "bqb_role", "role")
-    res_emotion = consult_db(db_session, "bqb_emotion", "emotion")
-    res_style = consult_db(db_session, "bqb_style", "style")
-    res_topic = consult_db(db_session, "bqb_context", "context")
+    res_description = consult_db(db_cursor, "bqb_description", "geng")
+    res_role = consult_db(db_cursor, "bqb_role", "role")
+    res_emotion = consult_db(db_cursor, "bqb_emotion", "emotion")
+    res_style = consult_db(db_cursor, "bqb_style", "style")
+    res_topic = consult_db(db_cursor, "bqb_context", "context")
+    db_cursor.close()
     # 生成匹配的Res
     res = [{'name': str("{:0>4}".format(str(i[0]))) + '.jpg',
             'src_path': 'static/bqbSource/' + str(
@@ -110,3 +113,19 @@ def sorted_dict_values(a_dict, reverse=False):
     lst = sorted(a_dict.items(), key=lambda item: item[1], reverse=reverse)
     # 先转换为lst，然后根据第二个元素排序
     return lst
+
+
+class CacheHandler(object):
+    def __init__(self, sid):
+        self.sid = sid
+        self.filepath = 'cache/' + self.sid + '.json'
+        if os.path.exists(self.filepath):
+            self.data = f = open(self.filepath)
+            self.data = json.load(f)
+            f.close()
+        else:
+            self.data = {}
+
+    def save_data(self):
+        with open(self.filepath, 'w', encoding='utf-8') as f:
+            json.dump(self.data, f, indent=4, ensure_ascii=False)

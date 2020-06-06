@@ -21,19 +21,8 @@ def connect_db(host,port,db,user,pwd):
     return cursor
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def consult_db(db_cursor, table, field):
+    sql_gen = "select name," + field + " from " + table
+    db_cursor.execute(sql_gen)
+    res = db_cursor.fetchall()  # 这是bqb描述
+    return res

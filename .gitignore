@@ -168,3 +168,6 @@ app/main/text_retrieval/word2vec.bin
 .user.ini
 uwsgi.ini
 uwsgi.pid
+
+# session_cache
+app/cache/*

@@ -4,7 +4,7 @@ sys.path.append('main/cnn_retrieval')
 sys.path.append('./')
 import numpy as np
 import torch
-from cnn_retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
+from main.cnn_retrieval.cnn_retrieval import load_model, load_data, extract_feature, load_query_image, sort_img, extract_feature_query
 from main.text_retrieval.retrieval import text_retrieve
 from main.utils import sorted_dict_values
 

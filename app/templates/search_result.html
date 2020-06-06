@@ -117,7 +117,7 @@
     <script>
         function jump_page_test () {
             alert("jump1");
-            window.location.href = '/result?page=1&get_mode=filter';
+            window.location.href = '/result?page=2&get_mode=filter';
         }
 
         function jump_filter_test () {
@@ -127,7 +127,7 @@
                 "emotion":["开心"]
             }
             window.location.href = '/result?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter);
-            // result?page=1&get_mode=filter&filter={'role':['熊猫头','黄脸'],'emotion':['开心']}
+            // result?page=1&get_mode=filter&filter={'role':['熊猫头','黄脸'],'emotion':['喜欢']}
         }
 
         function jump_browse_test () {
