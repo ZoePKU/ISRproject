@@ -13,7 +13,7 @@ def cnn_load_data():
 
 
 def cnn_load_model():
-    return load_model(pretrained_model='main/cnn_retrieval/models/net_best.pth', use_gpu=True)
+    return load_model(pretrained_model='main/cnn_retrieval/models/net_best.pth') # , use_gpu=True
 
 
 def cnn_build_feature():

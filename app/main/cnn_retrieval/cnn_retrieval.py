@@ -11,13 +11,8 @@ import os
 from torch.utils.data import dataloader, Dataset
 from PIL import Image
 
-
+# 获取图片链接位置
 def get_file_list(file_path_list, sort=True):
-    """
-    Get list of file paths in one folder.
-    :param file_path: A folder path or path list.
-    :return: file list: File path list of
-    """
     import random
     if isinstance(file_path_list, str):
         file_path_list = [file_path_list]
@@ -35,12 +30,8 @@ def get_file_list(file_path_list, sort=True):
         file_lists = file_lists[0]
     return file_lists
 
-
+#图片类 CNN用
 class Gallery(Dataset):
-    """
-    Images in database.
-    """
-
     def __init__(self, image_paths, transform=None):
         super().__init__()
 
@@ -59,7 +50,7 @@ class Gallery(Dataset):
     def __len__(self):
         return len(self.image_paths)
 
-
+# 图->input
 def load_data(data_path, batch_size=1, shuffle=False, transform='default'):
     data_transform = transforms.Compose([
         transforms.Resize(256),
@@ -81,7 +72,7 @@ def load_data(data_path, batch_size=1, shuffle=False, transform='default'):
                                         )
     return data_loader
 
-
+# 提取特征
 def extract_feature(model, dataloaders, use_gpu=True):
     features = torch.FloatTensor()
     path_list = []
@@ -124,31 +115,20 @@ def load_query_image(query_path):
     query_image = data_transforms(query_image)
     return query_image
 
-
-def load_model(pretrained_model=None, use_gpu=True):
-    """
-
-    :param check_point: Pretrained model path.
-    :return:
-    """
+# 读模型
+def load_model(pretrained_model=None,):
     model = models.resnet50(pretrained=False)
     num_ftrs = model.fc.in_features
     add_block = []
-    add_block += [nn.Linear(num_ftrs, 30)]  # number of training classes
+    add_block += [nn.Linear(num_ftrs, 30)]  # 训练集数量
     model.fc = nn.Sequential(*add_block)
     model.load_state_dict(torch.load(pretrained_model))
-
-    # remove the final fc layer
     model.fc = nn.Sequential()
-    # change to test modal
     model = model.eval()
-    use_gpu = use_gpu and torch.cuda.is_available()
-    if use_gpu:
-        model = model.cuda()
     return model
 
 
-# sort the images
+# 排序
 def sort_img(qf, gf):
     score = gf * qf
     score = score.sum(1)
@@ -169,8 +149,7 @@ if __name__ == '__main__':
                             )
 
     # Prepare model.
-    model = load_model(pretrained_model='./model/ft_ResNet50/net_best.pth',
-                       use_gpu=True)
+    model = load_model(pretrained_model='./model/ft_ResNet50/net_best.pth')
 
     # Extract database features.
     gallery_feature, image_paths = extract_feature(model=model,

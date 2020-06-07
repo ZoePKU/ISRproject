@@ -34,7 +34,7 @@ def text_retrieve(query):
     for i in simi_res:
         for j in reverse_dict[i[0]]:  # i[0]是x
             if j in Res:
-                Res[j] += reverse_dict[i[0]][j] * i[2]  # 这里应该还要乘以idf，暂时没有
+                Res[j] += reverse_dict[i[0]][j] * i[2]
             else:
                 Res[j] = reverse_dict[i[0]][j] * i[2]
 

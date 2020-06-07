@@ -120,8 +120,8 @@ class CacheHandle(object):
         self.sid = sid
         self.filepath = 'cache/' + self.sid + '.json'
         if os.path.exists(self.filepath):
-            self.data = f = open(self.filepath)
-            self.data = json.load(f)
+            self.data = f = open(self.filepath,encoding="utf-8")
+            self.data = json.load(f, encoding="utf-8")
             f.close()
         else:
             self.data = {}
