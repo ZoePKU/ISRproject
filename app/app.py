@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*
 import os
+import numpy
 from base64 import b64encode
 from flask import Flask, render_template, request, redirect, make_response
 from main.cnn_retrieval.cnn_utils import *
 from main.text_retrieval.retrieval import *
-from main.utils import pic_info, in_filter, CacheHandler
+from main.utils import pic_info, in_filter, CacheHandle
 
 
 # 这里是单独的文字检索
@@ -31,14 +32,14 @@ def mix_retrieve(query_text):
     return res
 
 
-def res_from_session(handler, page=1, filter_dict={}):
+def res_from_session(handle, page=1, filter_dict={}):
     """
     从session读取上一次检索的结果，并使用过滤器进行筛选
     @param page: 查看第几页，每页20个
     @param filter_dict: 过滤器字典
     @return: 结果图片列表
     """
-    tmp_res = [item_res for item_res in handler.data['last_res']['data'] if in_filter(item_res, filter_dict)]
+    tmp_res = [item_res for item_res in handle.data['last_res']['data'] if in_filter(item_res, filter_dict)]
     tmp_res = tmp_res[(page - 1) * 20:page * 20]
     return tmp_res
 
@@ -98,7 +99,7 @@ def result():
         flag_first = True
         sid = b64encode(os.urandom(24)).decode('utf-8')
         sid = ''.join(list(filter(str.isalnum, sid)))
-    cache_handler = CacheHandler(sid)
+    cache_handle = CacheHandle(sid)
 
     if request.method == 'POST':
         files = request.files
@@ -118,19 +119,21 @@ def result():
             res = mix_retrieve(query_text)
             total_length = len(res)
             part_res = page_filter(res)
-            cache_handler.data['last_res'] = {}
-            cache_handler.data['last_res']['query_mode'] = 3
-            cache_handler.data['last_res']['query_info'] = 'query/query.jpg'
-            cache_handler.data['last_res']['total_length'] = total_length
-            cache_handler.data['last_res']['data'] = res
-            cache_handler.save_data()
+            cache_handle.data['last_res'] = {}
+            cache_handle.data['last_res']['query_mode'] = 3
+            cache_handle.data['last_res']['query_info'] = {'query_text':query_text,'query_pic':'query/query.jpg'}
+            cache_handle.data['last_res']['total_length'] = total_length
+            cache_handle.data['last_res']['data'] = res
+            cache_handle.save_data()
             resp = make_response(render_template('search_result.html',
-                                   success=True,
-                                   query_mode=3,
-                                   query_info='query/query.jpg',
-                                   length=len(part_res),
-                                   total_length=total_length,
-                                   data=part_res))
+                                                 success=True,
+                                                 request_type='search',
+                                                 query_mode=3,
+                                                 query_info={'query_text':query_text,'query_pic':'query/query.jpg'},
+                                                 total_length=total_length,
+                                                 length=len(part_res),
+                                                 page=1,
+                                                 data=part_res))
 
         # 接收到index页面的检索请求，带图片请求，调用图片检索
         elif query_mode_flag == 2:
@@ -141,19 +144,21 @@ def result():
             res = pic_retrieve()
             total_length = len(res)
             part_res = page_filter(res)
-            cache_handler.data['last_res'] = {}
-            cache_handler.data['last_res']['query_mode'] = 2
-            cache_handler.data['last_res']['query_info'] = 'query/query.jpg'
-            cache_handler.data['last_res']['total_length'] = total_length
-            cache_handler.data['last_res']['data'] = res
-            cache_handler.save_data()
+            cache_handle.data['last_res'] = {}
+            cache_handle.data['last_res']['query_mode'] = 2
+            cache_handle.data['last_res']['query_info'] = {'query_pic':'query/query.jpg'}
+            cache_handle.data['last_res']['total_length'] = total_length
+            cache_handle.data['last_res']['data'] = res
+            cache_handle.save_data()
             resp = make_response(render_template('search_result.html',
-                                   success=True,
-                                   query_mode=2,
-                                   query_info='query/query.jpg',
-                                   length=len(part_res),
-                                   total_length=total_length,
-                                   data=part_res))
+                                                 success=True,
+                                                 request_type='search',
+                                                 query_mode=2,
+                                                 query_info={'query_pic':'query/query.jpg'},
+                                                 total_length=total_length,
+                                                 length=len(part_res),
+                                                 page=1,
+                                                 data=part_res))
 
         # 接收到index页面的检索请求，没有图片的请求，返回文字检索的结果
         elif query_mode_flag == 1:
@@ -163,19 +168,21 @@ def result():
             res = retrieve(query_text)
             total_length = len(res)
             part_res = page_filter(res)
-            cache_handler.data['last_res'] = {}
-            cache_handler.data['last_res']['query_mode'] = 1
-            cache_handler.data['last_res']['query_info'] = query_text
-            cache_handler.data['last_res']['total_length'] = total_length
-            cache_handler.data['last_res']['data'] = res
-            cache_handler.save_data()
+            cache_handle.data['last_res'] = {}
+            cache_handle.data['last_res']['query_mode'] = 1
+            cache_handle.data['last_res']['query_info'] = {'query_text':query_text}
+            cache_handle.data['last_res']['total_length'] = total_length
+            cache_handle.data['last_res']['data'] = res
+            cache_handle.save_data()
             resp = make_response(render_template('search_result.html',
-                                   success=True,
-                                   query_mode=1,
-                                   query_info=query_text,
-                                   length=len(part_res),
-                                   total_length=total_length,
-                                   data=part_res))
+                                                 success=True,
+                                                 request_type='search',
+                                                 query_mode=1,
+                                                 query_info={'query_text':query_text},
+                                                 total_length=total_length,
+                                                 page=1,
+                                                 length=len(part_res),
+                                                 data=part_res))
 
     elif request.method == 'GET':
         get_mode = request.args.get('get_mode')
@@ -186,39 +193,45 @@ def result():
             if filter_dict_str:
                 filter_dict = eval(filter_dict_str)
             page = eval(request.args.get('page'))
-            res = res_from_session(cache_handler, page, filter_dict=filter_dict)
+            res = res_from_session(cache_handle, page, filter_dict=filter_dict)
             resp = make_response(render_template('search_result.html',
-                                   success=True,
-                                   query_mode=cache_handler.data['last_res']['query_mode'],
-                                   query_info=cache_handler.data['last_res']['query_info'],
-                                   total_length=cache_handler.data['last_res']['total_length'],
-                                   page=page,
-                                   length=len(res),
-                                   data=res))
+                                                 success=True,
+                                                 request_type='filter',
+                                                 query_mode=cache_handle.data['last_res']['query_mode'],
+                                                 query_info=cache_handle.data['last_res']['query_info'],
+                                                 total_length=cache_handle.data['last_res']['total_length'],
+                                                 page=page,
+                                                 filter_dict=filter_dict,
+                                                 length=len(res),
+                                                 data=res))
 
         elif get_mode == 'browse':
             filter_dict = eval(request.args.get('filter'))
             page = eval(request.args.get('page'))
             print("浏览")
-            cache_handler.data['last_status'] = 0
-            cache_handler.data['last_res'] = {}
+            cache_handle.data['last_status'] = 0
+            cache_handle.data['last_res'] = {}
             res, total_len = res_browse(page, filter_dict=filter_dict)
             resp = make_response(render_template('search_result.html',
-                                   success=True,
-                                   query_mode=4,
-                                   query_info='',
-                                   total_length=total_len,
-                                   data=res,
-                                   length=len(res)))
+                                                 success=True,
+                                                 request_type='browse',
+                                                 query_mode=-1,
+                                                 query_info='',
+                                                 total_length=total_len,
+                                                 length=len(res),
+                                                 page=page,
+                                                 filter_dict=filter_dict,
+                                                 data=res))
         else:
             print("啥都不干")
             resp = make_response(render_template('search_result.html',
-                                   success=True,
-                                   query_mode=0,
-                                   query_info='',
-                                   total_length=0,
-                                   data={},
-                                   length=0))
+                                                 success=True,
+                                                 query_mode=0,
+                                                 query_info='',
+                                                 total_length=0,
+                                                 page=-1,
+                                                 data={},
+                                                 length=0))
 
     if flag_first:
         resp.set_cookie("sid", value=sid)

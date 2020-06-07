@@ -9,26 +9,27 @@
     <link rel="stylesheet" type="text/css" href="../static/search_result/css/MyPaging.css">
     <script src="../static/search_result/js/jquery.min.js"></script>
     <script src="../static/index/js/index.js"></script>
-       <script>
-           
-    <!-- 点击相机图标出现上传图片框-->
-        function show_2(){
-            var myId=document.getElementById("image_search");
-            if(myId.style.display == "none"){
-        document.getElementById("image_search").style.display="block";
+    <script>
+
+        <!--
+        点击相机图标出现上传图片框-->
+        function show_2() {
+            var myId = document.getElementById("image_search");
+            if (myId.style.display == "none") {
+                document.getElementById("image_search").style.display = "block";
+            }
         }
-    }
-       
-       
-    <!--点击关闭图标关闭上传图片框-->
-       function hide_2(){
-           var myId=document.getElementById("image_search");
-          if(myId.style.display == "block"){
-          document.getElementById("image_search").style.display="none";
-          }
-       }
-       
-       </script>
+
+
+        <!--点击关闭图标关闭上传图片框-->
+        function hide_2() {
+            var myId = document.getElementById("image_search");
+            if (myId.style.display == "block") {
+                document.getElementById("image_search").style.display = "none";
+            }
+        }
+
+    </script>
 </head>
 
 <body>
@@ -37,7 +38,7 @@
 
         {#LOGO#}
         <div class="logo">
-            <a href="#"><img src="../static/search_result/images/title.png"
+            <a href="{{ url_for('index') }}"><img src="../static/search_result/images/title.png"
                              style="width: 259px;height: 40px"></a>
             <img src="../static/search_result/images/logo.gif"
                  style="width: 31px;height: 35px;margin-left: 10px">
@@ -46,24 +47,27 @@
         {#搜索栏#}
         <div class="search_bar">
             <img src="../static/index/images/search_icon.png" class="search_icon">
-            <input type="text" class="input" placeholder="熊猫头"/>
-                <input type="button" class="image_icon" onClick="show_2();" style="background: url(../static/index/images/image_icon.svg);width:20px;height:20px;margin-top:10px;margin-left:0px;"/>
+            <input type="text" class="input" placeholder="{% if query_mode == 1 or query_mode == 3 %}{{ query_info['query_text'] }}{% endif %} "/>
+            <input type="button" class="image_icon" onClick="show_2();"
+                   style="background: url(../static/index/images/image_icon.svg);width:20px;height:20px;margin-top:10px;margin-left:0px;"/>
             <button class="button" type="submit">搜索</button>
-            <a href="#"><u>首页</u></a>
+            <a href="{{ url_for('index') }}"><u>首页</u></a>
         </div>
 
         {#图片上传#}
-        <div id="image_search" style="border: 1px solid #DBDBDB; display:none;margin-top:30px;width:700px;height:600px;" >
-        <p class="image_search_font">按图片搜索</p>
-        <input type="button" class="close_icon" onClick="hide_2();" style="background: url(../static/index/images/close.svg);width:16px;height:16px;"/>
+        <div id="image_search"
+             style="border: 1px solid #DBDBDB; display:none;margin-top:30px;width:700px;height:600px;">
+            <p class="image_search_font">按图片搜索</p>
+            <input type="button" class="close_icon" onClick="hide_2();"
+                   style="background: url(../static/index/images/close.svg);width:16px;height:16px;"/>
 
-        <button class="button_2" type="submit">上传图片</button>
-        <input type="text" class="input_2" placeholder="选择图片路径"/>
-        <p class="image_search_font">预览：</p>
-        <div class="image_show" style="border: 1px solid #DBDBDB">
-            <img src="#" id="imgs" onload="adapt();"/>
-        </div>
-         <button class="button_3" type="submit">取消上传</button>
+            <button class="button_2" type="submit">上传图片</button>
+            <input type="text" class="input_2" placeholder="选择图片路径"/>
+            <p class="image_search_font">预览：</p>
+            <div class="image_show" style="border: 1px solid #DBDBDB">
+                <img src="#" id="imgs" onload="adapt();"/>
+            </div>
+            <button class="button_3" type="submit">取消上传</button>
 
         </div>
 
@@ -71,27 +75,41 @@
         <div class="select_area">
             {% for cata_name in ['角色','情绪','情境','风格'] %}
                 <div class="line">
-                    <b>{{ cata_name }}</b><a class="active" onClick="transverse(this)" type="0" style="background-color:#797979;">全部</a>
+                    <b>{{ cata_name }}</b><a class="active" onClick="transverse(this)" type="0"
+                                             style="background-color:#797979;">全部</a>
                     {%- for i in range(7) -%}
-                    <a class="normal" onClick="choosetype(this)">xxx</a>
+                        <a class="normal" onClick="choosetype(this)">xxx</a>
                     {%- endfor -%}
                     <a class="btn" onClick="show(this)" style="font-weight:800;">更多∨</a>
-                     <div class="more">
-                    {%- for i in range(3) -%}
-                         {%- for j in range(7) -%}
-                    <a class="normal" onClick="choosetype(this)">xxx</a>
-                    {%- endfor -%}<br>
+                    <div class="more">
+                                        {%- for i in range(3) -%}
+                        {%- for j in range(7) -%}
+                            <a class="normal" onClick="choosetype(this)">xxx</a>
+                        {%- endfor -%}<br>
                     {%- endfor -%}
-                </div>
+                                
+                    </div>
                     <hr class="hr"/>
                 </div>
             {% endfor %}
         </div>
 
         {#结果提示#}
-        <div class="reminder">以下为“<a>xxx</a>”的检索结果，共<a>x</a>条：</div>
+        {% for cata_name in ['角色','情绪','情境','风格'] %}
+            {% if cata_name in filter_dict %}
+            {{ cata_name }}:
+                {% for item_name in filter_dict[cata_name] %}
+                    item_name
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <div class="reminder">以下为
+            {%- if query_mode == 1 %}文本"{{ query_info['query_text'] }}"{% elif query_mode == 2 %}图片{% elif query_mode == 3 %}图片和文本{{ query_info['query_text'] }}{% endif -%}
+            的检索结果，共{{ total_length }}条：</div>
         <div class="result_header">
-            <a><&nbsp;1/20&nbsp;></a>
+            {% if page > 0 %}
+                <a><&nbsp;{{ page }}/{{ (total_length + 19) // 20 }}&nbsp;></a>
+            {% endif %}
         </div>
 
         {#图片结果#}
@@ -99,94 +117,105 @@
             {#减号是为了防止换行产生空白符#}
             {%- for i in range(length) -%}
                 {%- if i%4==0 -%}
-                    <img src="{{data[i]['src_path']}}" style="margin-left: 20px">
+                    <img src="{{ data[i]['src_path'] }}" style="margin-left: 20px">
                 {%- else -%}
-                    <img src="{{data[i]['src_path']}}">
+                    <img src="{{ data[i]['src_path'] }}">
                 {%- endif -%}
             {%- endfor -%}
         </div>
 
         {#页面选择按钮   下一句 初始化一个当前页码#}
-        <div class="box2"></div>
+        <div>
+            <button {% if page > 1 %} onclick="jump_page_test({{ page - 1 }}) {% endif %}">上一页</button>
+            <span>第{{ page }}页/共{{ (total_length + 19) // 20 }}页</span>
+            <button {% if page < (total_length + 19) // 20 %} onclick="jump_page_test({{ page + 1 }}) {% endif %}">下一页</button>
+            <input type="text" placeholder="输入页码" id="jump-page" width="20px"/><button onclick="jump_page_test($('#jump-page').val())">GO</button>
+        </div>
+        {#<div class="box2"></div>#}
 
-    {#尾部#}
-    <div style="font-size: 13px;line-height: 2em;margin-top:30px;margin-bottom: 30px">
-        © Copyright ISR BQB ®<br>
-        Please contact us through zdq
-    </div>
-    <script>
-        function jump_page_test () {
-            alert("jump1");
-            window.location.href = '/result?page=2&get_mode=filter';
-        }
-
-        function jump_filter_test () {
-            alert("filter");
-            let feature_filter = {
-                "role":["熊猫头","黄脸"],
-                "emotion":["开心"]
+        {#尾部#}
+        <div style="font-size: 13px;line-height: 2em;margin-top:30px;margin-bottom: 30px">
+            © Copyright ISR BQB ®<br>
+            Please contact us through zdq
+        </div>
+        <script>
+            function jump_page_test(page) {
+                let max_page = {{ (total_length + 19) // 20 }};
+                if (page > max_page)
+                    return;
+                alert("jump to " + page.toString());
+                window.location.href = '/result?page=' + page.toString() + '&get_mode=filter';
             }
-            window.location.href = '/result?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter);
-            // result?page=1&get_mode=filter&filter={'role':['熊猫头','黄脸'],'emotion':['喜欢']}
-        }
 
-        function jump_browse_test () {
-            alert("browse");
-            window.location.href = '/result?page=2&get_mode=browse&filter={"role":["熊猫头","黄脸"]}';
-        }
-    </script>
-    <div>
-        <button onclick="jump_page_test()">筛选出第二页</button>
-        <button onclick="jump_filter_test()">筛选熊猫头</button>
-        <button onclick="jump_page_test()">浏览第一页熊猫头</button>
+            function jump_filter_test() {
+                alert("filter");
+                let feature_filter = {
+                    "role": ["熊猫头", "黄脸"],
+                    "emotion": ["喜欢"]
+                }
+                window.location.href = '/result?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter);
+                // result?page=1&get_mode=filter&filter={'role':['熊猫头','黄脸'],'emotion':['喜欢']}
+            }
+
+            function jump_browse_test() {
+                alert("browse");
+                window.location.href = '/result?page=2&get_mode=browse&filter={"role":["熊猫头","黄脸"]}';
+            }
+        </script>
+        <div>
+            <button onclick="jump_page_test()">筛选出第二页</button>
+            <button onclick="jump_filter_test()">筛选熊猫头</button>
+            <button onclick="jump_page_test()">浏览第一页熊猫头</button>
+        </div>
     </div>
 </center>
 
 
 <script type="text/javascript">
     //================      控制点击单个的时候             ====================
-	function choosetype(obj){
-		$(obj).toggleClass("active");					//控制单个的样式添加和删除
-	};
-	//================      控制点击横排全选的时候             ====================
-	function transverse(obj) {
-		//声明参数
-		var b = "";
-		//查找当前父级标签下的所有的normal
-		$(obj).parents(".line").find(".normal").each(function(){
-			if(!$(this).hasClass("active")){		//判断全选的时候，b==true
-				b = false;						//取消全选
-				return false;					//跳出当前循环
-			}else{								//否则
-				b = true;						//实现全选
-			}
+    function choosetype(obj) {
+        $(obj).toggleClass("active");					//控制单个的样式添加和删除
+    };
 
-		});
-		//查找父级标签下的所有的normal
-		$(obj).parents(".line").find(".normal").each(function(){
-			if(b){									//判断全选的时候，b==true
-				$(this).removeClass("active");			//取消全选
-			}else{									//否则
-				$(this).addClass("active");			//实现全选
-			}
-		});
+    //================      控制点击横排全选的时候             ====================
+    function transverse(obj) {
+        //声明参数
+        var b = "";
+        //查找当前父级标签下的所有的normal
+        $(obj).parents(".line").find(".normal").each(function () {
+            if (!$(this).hasClass("active")) {		//判断全选的时候，b==true
+                b = false;						//取消全选
+                return false;					//跳出当前循环
+            } else {								//否则
+                b = true;						//实现全选
+            }
 
-	}
+        });
+        //查找父级标签下的所有的normal
+        $(obj).parents(".line").find(".normal").each(function () {
+            if (b) {									//判断全选的时候，b==true
+                $(this).removeClass("active");			//取消全选
+            } else {									//否则
+                $(this).addClass("active");			//实现全选
+            }
+        });
+
+    }
 
     //================      展开与收缩             ====================
-	 function show(obj){
-            $(obj).parents(".line").find(".more").css({"display":"block","height":"auto"});
-            $(obj).html("更多∧");
-            $(obj).attr("onclick","hide(this);");
-        }
+    function show(obj) {
+        $(obj).parents(".line").find(".more").css({"display": "block", "height": "auto"});
+        $(obj).html("更多∧");
+        $(obj).attr("onclick", "hide(this);");
+    }
 
-        function hide(obj){
-            $(obj).parents(".line").find(".more").css({"display":"none","height":"75px"});
-            $(obj).html("更多∨");
-            $(obj).attr("onclick","show(this);");
-        }
+    function hide(obj) {
+        $(obj).parents(".line").find(".more").css({"display": "none", "height": "75px"});
+        $(obj).html("更多∨");
+        $(obj).attr("onclick", "show(this);");
+    }
 
-     $(".hr:last").css("display","none");
+    $(".hr:last").css("display", "none");
 </script>
 <script src="../static/search_result/js/MyPaging.js"></script>
 <script src="../static/search_result/js/script.js"></script>

@@ -45,7 +45,7 @@ def cnn_retrieve(query_image_path):
     #image_paths = cnn_load_image_paths()
     length = int(image_index.size()[0])
     print(image_index.size())
-    sorted_paths = [(image_index[i].item() + 1, similarity[i]) for i in range(length) if similarity[i] > 0.85]
+    sorted_paths = [(image_index[i].item() + 1, similarity[i].item()) for i in range(length) if similarity[i] > 0.85]
     return sorted_paths
 
 

@@ -115,7 +115,7 @@ def sorted_dict_values(a_dict, reverse=False):
     return lst
 
 
-class CacheHandler(object):
+class CacheHandle(object):
     def __init__(self, sid):
         self.sid = sid
         self.filepath = 'cache/' + self.sid + '.json'
