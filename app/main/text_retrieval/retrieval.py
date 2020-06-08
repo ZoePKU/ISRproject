@@ -61,7 +61,7 @@ def text_retrieve(query):
             for j in reverse_dict[i]:
                 if j in Res:
                     Res[j] += reverse_dict[i][j]
-                    print(i, Res[j])
+                    # print(i, Res[j])
 
     '''
     for i in simi_res:
@@ -82,10 +82,10 @@ def text_retrieve(query):
             if j in Res:
                 # 要不先改成乘以1的权重吧
                 Res[j] += reverse_dict[i[0]][j] * i[2]
-                print(i[0],i[1],Res[j],"增加")
+                # print(i[0],i[1],Res[j],"增加")
             else:
                 Res[j] = reverse_dict[i[0]][j] * i[2]
-                print(i[0], i[1], Res[j])
+                # print(i[0], i[1], Res[j])
 
 
     res_list = sorted_dict_values(Res, True)
