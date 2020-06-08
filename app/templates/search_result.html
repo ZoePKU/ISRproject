@@ -73,21 +73,30 @@
 
         {#筛选区域#}
         <div class="select_area">
+            {#分类标题#}
             {% for cata_name in ['角色','情绪','情境','风格'] %}
                 <div class="line">
-                    <b>{{ cata_name }}</b><a class="active" onClick="transverse(this)" type="0"
-                                             style="background-color:#797979;">全部</a>
+                    {#全部按钮#}
+                    <b>{{ cata_name }}</b><a class="active" onClick="transverse(this)" type="0" style="background-color:#797979;">全部</a>
+
+                    {% set role_items = ["熊猫头","猫","狗","鹦鹉兄弟","黄脸","呲牙","柴犬","汤圆酱","女孩","猫和老鼠","心","坏坏","鸭","蘑菇头","天线宝宝","小猪佩奇","武林外传","假笑男孩","王境泽","派大星","蜡笔小新","咱们裸熊","宋民国","橘猫","男孩","猪"] %}
+                    {#第一行#}
                     {%- for i in range(7) -%}
-                        <a class="normal" onClick="choosetype(this)">xxx</a>
+                        <a class="normal" onClick="choosetype(this)">{{ role_items[i] }}</a>
                     {%- endfor -%}
+
+                    {#更多按钮#}
                     <a class="btn" onClick="show(this)" style="font-weight:800;">更多∨</a>
+
+                    {#更多内容的容器#}
                     <div class="more">
-                                        {%- for i in range(3) -%}
+                    {%- for i in range(1, (role_items|length + 6) // 7) -%}
                         {%- for j in range(7) -%}
-                            <a class="normal" onClick="choosetype(this)">xxx</a>
+                            {#更多中的标签#}
+                            <a class="normal" onClick="choosetype(this)">{{ role_items[i * 7 + j] }}</a>
                         {%- endfor -%}<br>
                     {%- endfor -%}
-                                
+
                     </div>
                     <hr class="hr"/>
                 </div>

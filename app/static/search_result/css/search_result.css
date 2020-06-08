@@ -1,4 +1,4 @@
- a:link 
+ a:link
  { 	text-decoration: none;
  	color: #797979;
  }
@@ -85,19 +85,18 @@ button:focus{
 	padding-bottom:30px;
 }
 
-.line
-{
+.line {
     width: 900px;
-	height: auto;
-	font-size: 14px;
-	color: #333333
-	padding-top:5px;
-	padding-bottom:10px;
+    height: auto;
+    font-size: 14px;
+    color: #333333;
+    padding-top: 5px;
+    padding-bottom: 10px;
 }
 
 .line a
 {
-	margin-left: 60px;
+	margin-left: 10px;
 	cursor: pointer;
 }
 
@@ -185,9 +184,9 @@ button:focus{
 .image_search{
     width:635px;
     height:600px;
-    float:center;
+    /*float:center;*/
     margin-top:30px;
-    
+
 }
 
 .image_search_font{
@@ -209,7 +208,7 @@ button:focus{
       margin-right: 30px;
       color: white;
       cursor: pointer;
-      
+
 }
 
 button_2:focus{
@@ -239,7 +238,7 @@ input_2:focus{
     margin-top: 20px;
     color: white;
     cursor: pointer;
-      
+
 }
 
 button_3:focus{
@@ -249,9 +248,9 @@ button_3:focus{
 .image_show{
     width:465px;
     height:360px;
-    float:center;
+    /*float:center;*/
     margin-top:30px;
-    
+
 }
 
 .img{
