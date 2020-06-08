@@ -1,6 +1,7 @@
 from collections import Counter
 from main.text_retrieval.utils import *
 import math
+from main.utils import *
 
 def description_parse(dict,thes_words,thes_dict, stop_words):
     cut_dict = {}
@@ -79,7 +80,20 @@ if __name__ == '__main__':
     #分词
     cut_dict = description_parse(des_dict,thes_words,thes_dict,stop_words)
     print("完成分词")
-
+    print(cut_dict)
+    # 把其他字段加入检索式
+    res_lst = [(i,0) for i in cut_dict]
+    res = pic_info(res_lst)
+    num = 0
+    for i in cut_dict:
+        if i not in ban_lst:
+            if cut_dict[i] == "":
+                cut_dict[i] = list()
+            cut_dict[i].append(res[num]['role'])
+            cut_dict[i].append(res[num]['emotion'])
+            cut_dict[i].append(res[num]['style'])
+            cut_dict[i].append(res[num]['topic'])
+            num += 1
     # 建倒排索引
     reverse_index = revert(cut_dict)
     print("完成建立倒排档")
