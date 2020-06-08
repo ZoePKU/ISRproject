@@ -1,7 +1,7 @@
 from main.text_retrieval.utils import parse, init_thes, json_input
 from main.utils import sorted_dict_values
 from gensim import models
-
+import numpy as np
 
 thes_words, thes_dict, stop_words = init_thes()
 print("开始加载w2v模型")
@@ -25,12 +25,32 @@ def text_retrieve(query):
                 else:
                     Res[j] = reverse_dict[i][j]
 
-    # w2v匹配(这个应该读入set，然后每个词和set里面的词匹配，但是考虑到优化，可能得先对set里的词聚类，这里没做)
-    # 暂时没有聚类
+    # w2v匹配
+    # 首先读入聚类json
+    cl_dict = json_input("main/text_retrieval/clustering.json")
+    # clustering_center属性是聚类中心，0-7对应聚类词
     # model = models.KeyedVectors.load_word2vec_format('word2vec_779845.bin', binary=True)
+    simi_res = []
     for y in cut_list:
-        simi_res = [(x, y, model.similarity(x, y)) for x in reverse_dict if
-                    x in model and y in model and model.similarity(x, y) > 0.6]
+        # 先计算和哪个聚类中心最接近
+        max_simi = 0
+        max_index = 0
+        if y in model:
+            for i in range(8):
+                v1 = np.array(model[y])
+                v2 = np.array(cl_dict['cluster_center'][i])
+                # print(x)
+                # print(y)
+                # print(x,y)
+                Lx = np.sqrt(v1.dot(v1))
+                Ly = np.sqrt(v2.dot(v2))
+                cos_angle = v1.dot(v2) / (Lx * Ly)
+                if cos_angle > max_simi:
+                    max_simi = cos_angle
+                    max_index = i
+            simi_res += [(x, y, model.similarity(x, y)) for x in cl_dict[str(max_index)] if
+                    x in model and model.similarity(x, y) > 0.6]
+
     for i in simi_res:
         for j in reverse_dict[i[0]]:  # i[0]是x
             if j in Res:
