@@ -63,6 +63,8 @@ def pic_info(res_list):
             'style': [],
             'topic': []
             } for i in res_list]
+    for j in res:
+        j['description'] = res_description[int(j['name'])][1]
     for i in res_description:
         for j in res:
             if i[0] == j['name']:

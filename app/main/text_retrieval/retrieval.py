@@ -26,6 +26,7 @@ def text_retrieve(query):
                     Res[j] = reverse_dict[i][j]
 
     # w2v匹配
+    print("加载聚类json")
     # 首先读入聚类json
     cl_dict = json_input("main/text_retrieval/clustering.json")
     # clustering_center属性是聚类中心，0-7对应聚类词
@@ -50,6 +51,8 @@ def text_retrieve(query):
                     max_index = i
             simi_res += [(x, y, model.similarity(x, y)) for x in cl_dict[str(max_index)] if
                     x in model and model.similarity(x, y) > 0.6]
+    print("匹配结束")
+
 
     for i in simi_res:
         for j in reverse_dict[i[0]]:  # i[0]是x
@@ -59,4 +62,6 @@ def text_retrieve(query):
                 Res[j] = reverse_dict[i[0]][j] * i[2]
 
     res_list = sorted_dict_values(Res, True)
+    print("得到结果")
+    print(res_list)
     return res_list
