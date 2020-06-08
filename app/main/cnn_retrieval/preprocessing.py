@@ -1,3 +1,6 @@
+import sys
+# 加入cwd app/
+sys.path.append('./')
 from main.cnn_retrieval.cnn_utils import cnn_load_feature
 import numpy as np
 def out(feat,i,j):

@@ -94,6 +94,10 @@
             {% endfor %}
         </div>
 
+        <div>
+            <button onclick="jump_filter_test()">确定筛选</button>
+        </div>
+
         {#结果提示#}
         {% for cata_name in ['角色','情绪','情境','风格'] %}
             {% if cata_name in filter_dict %}
@@ -149,6 +153,8 @@
 
             function jump_filter_test() {
                 alert("filter");
+                let role_filter = [];
+                
                 let feature_filter = {
                     "role": ["熊猫头", "黄脸"],
                     "emotion": ["喜欢"]

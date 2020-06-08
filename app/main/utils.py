@@ -63,27 +63,14 @@ def pic_info(res_list):
             'style': [],
             'topic': []
             } for i in res_list]
-    for i in res_description:
-        for j in res:
-            if i[0] == j['name']:
-                j['description'] = i[1]
 
-    for i in res_role:
-        for j in res:
-            if i[0] == j['name']:
-                j['role'].append(i[1])
-    for i in res_emotion:
-        for j in res:
-            if i[0] == j['name']:
-                j['emotion'].append(i[1])
-    for i in res_style:
-        for j in res:
-            if i[0] == j['name']:
-                j['style'].append(i[1])
-    for i in res_topic:
-        for j in res:
-            if i[0] == j['name']:
-                j['topic'].append(i[1])
+    for j in res:
+        j['description'] = res_description[int(j['name'].split('.')[0])][1]
+        j['role'] = res_role[int(j['name'].split('.')[0])][1]
+        j['emotion'] = res_emotion[int(j['name'].split('.')[0])][1]
+        j['style'] = res_style[int(j['name'].split('.')[0])][1]
+        j['topic'] = res_topic[int(j['name'].split('.')[0])][1]
+
     print(res)
     return res
 
