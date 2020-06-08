@@ -84,16 +84,26 @@ if __name__ == '__main__':
     # 把其他字段加入检索式
     res_lst = [(i,0) for i in cut_dict]
     res = pic_info(res_lst)
-    num = 0
-    for i in cut_dict:
-        if i not in ban_lst:
-            if cut_dict[i] == "":
-                cut_dict[i] = list()
-            cut_dict[i].append(res[num]['role'])
-            cut_dict[i].append(res[num]['emotion'])
-            cut_dict[i].append(res[num]['style'])
-            cut_dict[i].append(res[num]['topic'])
-            num += 1
+    #     {
+    #         'name': '0002.jpg',
+    #         'src_path': 'static/bqbSource/0002.jpg',
+    #         'score': 71.8,
+    #         'description': 'it is a description',
+    #         'role': ['熊猫头', '黄脸'],
+    #         'emotion': ['开心', '愤怒'],
+    #         'style': ['沙雕', '睿智'],
+    #         'topic': ['怼人']
+    #     },
+    for i in res:
+        if cut_dict[i['name'].split('.')[0]] == "":
+            cut_dict[i['name'].split('.')[0]] = list()
+        num = i['name'].split('.')[0]
+        cut_dict[num] += i['role']
+        cut_dict[num] += i['emotion']
+        cut_dict[num] += i['style']
+        cut_dict[num] += i['topic']
+
+    print(cut_dict)
     # 建倒排索引
     reverse_index = revert(cut_dict)
     print("完成建立倒排档")

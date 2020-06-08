@@ -17,13 +17,15 @@ def text_retrieve(query):
     reverse_dict = json_input('main/text_retrieval/reverse_index.json')
     Res = dict()
     # 匹配函数
-    for i in cut_list:
+    for i in cut_list: #i是一个词
         if i in reverse_dict:
             for j in reverse_dict[i]:
                 if j in Res:
                     Res[j] += reverse_dict[i][j]
+                    print(i, Res[j])
                 else:
                     Res[j] = reverse_dict[i][j]
+                    print(i,Res[j])
 
     # w2v匹配
     print("加载聚类json")
@@ -49,17 +51,42 @@ def text_retrieve(query):
                 if cos_angle > max_simi:
                     max_simi = cos_angle
                     max_index = i
-            simi_res += [(x, y, model.similarity(x, y)) for x in cl_dict[str(max_index)] if
-                    x in model and model.similarity(x, y) > 0.6]
+            simi_res += [(x, y, model.similarity(x, y) ** 3) for x in cl_dict[str(max_index)] if
+                    not x == y and x in model and model.similarity(x, y) > 0.75]
     print("匹配结束")
 
 
+    for i in cut_list: #i是一个词
+        if i in reverse_dict:
+            for j in reverse_dict[i]:
+                if j in Res:
+                    Res[j] += reverse_dict[i][j]
+                    print(i, Res[j])
+
+    '''
     for i in simi_res:
         for j in reverse_dict[i[0]]:  # i[0]是x
             if j in Res:
+                # 要不先改成乘以1的权重吧
+                Res[j] += reverse_dict[i[1]][y] * i[2]
+                print(i[0], i[1], Res[j], "增加")
+            else:
+                Res[j] = reverse_dict[i[1]][y] * i[2]
+                print(i[0], i[1], Res[j])
+
+    
+    以上是暂时弃用的算法
+    '''
+    for i in simi_res:
+        for j in reverse_dict[i[0]]:  # i[0]是x
+            if j in Res:
+                # 要不先改成乘以1的权重吧
                 Res[j] += reverse_dict[i[0]][j] * i[2]
+                print(i[0],i[1],Res[j],"增加")
             else:
                 Res[j] = reverse_dict[i[0]][j] * i[2]
+                print(i[0], i[1], Res[j])
+
 
     res_list = sorted_dict_values(Res, True)
     print("得到结果")

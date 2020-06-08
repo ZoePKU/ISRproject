@@ -1,7 +1,10 @@
 import os
 import json
 from main.db import consult_db, connect_db
+from functools import cmp_to_key
 
+def cmp(i, j):
+    return i['score'] < j['score']
 
 def pic_info(res_list):
     """
@@ -63,14 +66,33 @@ def pic_info(res_list):
             'style': [],
             'topic': []
             } for i in res_list]
+    # i是一个tuple("0001.jpg")  res_list也是一个tuple(“1”,score)
+    for i in res_description:
+        for j in res:
+            if i[0] == j['name']:
+                j['description'] = i[1]
 
-    for j in res:
-        j['description'] = res_description[int(j['name'].split('.')[0]) - 1][1]
-        j['role'] = res_role[int(j['name'].split('.')[0]) - 1][1]
-        j['emotion'] = res_emotion[int(j['name'].split('.')[0]) - 1][1]
-        j['style'] = res_style[int(j['name'].split('.')[0]) - 1][1]
-        j['topic'] = res_topic[int(j['name'].split('.')[0]) - 1][1]
+    for i in res_role:
+        for j in res:
+            if i[0] == j['name']:
+                j['role'].append(i[1])
+                if i[0] == "0006.jpg":
+                    print(i[1])
+    for i in res_emotion:
+        for j in res:
+            if i[0] == j['name']:
+                j['emotion'].append(i[1])
+    for i in res_style:
+        for j in res:
+            if i[0] == j['name']:
+                j['style'].append(i[1])
+    for i in res_topic:
+        for j in res:
+            if i[0] == j['name']:
+                j['topic'].append(i[1])
 
+    # 排序
+    res.sort(key=cmp_to_key(cmp))
     print(res)
     return res
 
