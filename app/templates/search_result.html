@@ -11,8 +11,7 @@
     <script src="../static/index/js/index.js"></script>
     <script>
 
-        <!--
-        点击相机图标出现上传图片框-->
+        // 点击相机图标出现上传图片框
         function show_2() {
             var myId = document.getElementById("image_search");
             if (myId.style.display == "none") {
@@ -21,7 +20,7 @@
         }
 
 
-        <!--点击关闭图标关闭上传图片框-->
+        // 点击关闭图标关闭上传图片框
         function hide_2() {
             var myId = document.getElementById("image_search");
             if (myId.style.display == "block") {
@@ -39,7 +38,7 @@
         {#LOGO#}
         <div class="logo">
             <a href="{{ url_for('index') }}"><img src="../static/search_result/images/title.png"
-                             style="width: 259px;height: 40px"></a>
+                                                  style="width: 259px;height: 40px"></a>
             <img src="../static/search_result/images/logo.gif"
                  style="width: 31px;height: 35px;margin-left: 10px">
         </div>
@@ -74,15 +73,21 @@
         {#筛选区域#}
         <div class="select_area">
             {#分类标题#}
+            {% set tag_items = {
+                        '角色': ["熊猫头","猫","狗","鹦鹉兄弟","黄脸","呲牙","柴犬","汤圆酱","女孩","猫和老鼠","心","坏坏","鸭","蘑菇头","天线宝宝","小猪佩奇","武林外传","假笑男孩","王境泽","派大星","蜡笔小新","咱们裸熊","宋民国","橘猫","男孩","猪"],
+                        '情绪': ["嘲讽","悲伤","厌恶","愤怒","痛苦","喜欢","郁闷","困惑","快乐","冷漠","得意","烦闷","害羞","无语","喜悦","震惊","焦虑","害怕","尴尬","忧虑"],
+                        '情境': ["怼人","恋爱","卖萌","学习","自嘲","自恋","装逼","夸赞","贫穷","应答","质问","比心","告辞","崩溃","食物","压力","拒绝","威胁","敷衍","睡觉","鄙视","斗图","熬夜","肥胖","否认","感叹","作死"],
+                        '风格': ["沙雕","可爱","真人","嘴臭","丧","动漫","影视截图","复古","污","魔性"]
+            }%}
+            {% set cata_name_eng = ['role', 'emotion', 'topic', 'style'] %}
             {% for cata_name in ['角色','情绪','情境','风格'] %}
-                <div class="line">
+                <div class="line" id="{{ "filter" ~ loop.index }}">
                     {#全部按钮#}
-                    <b>{{ cata_name }}</b><a class="active" onClick="transverse(this)" type="0" style="background-color:#797979;">全部</a>
-
-                    {% set role_items = ["熊猫头","猫","狗","鹦鹉兄弟","黄脸","呲牙","柴犬","汤圆酱","女孩","猫和老鼠","心","坏坏","鸭","蘑菇头","天线宝宝","小猪佩奇","武林外传","假笑男孩","王境泽","派大星","蜡笔小新","咱们裸熊","宋民国","橘猫","男孩","猪"] %}
+                    <b>{{ cata_name }}</b><a class="active choose-all-tag" onClick="transverse(this)" type="0" style="background-color:#797979;">全部</a>
                     {#第一行#}
+                    {% set index = loop.index0 %}
                     {%- for i in range(7) -%}
-                        <a class="normal" onClick="choosetype(this)">{{ role_items[i] }}</a>
+                        <a class="normal filter-tag {% if filter_dict and tag_items[cata_name][i] in filter_dict[cata_name_eng[index]] %} active {% endif %}" onClick="choosetype(this)">{{ tag_items[cata_name][i] }}</a>
                     {%- endfor -%}
 
                     {#更多按钮#}
@@ -90,13 +95,16 @@
 
                     {#更多内容的容器#}
                     <div class="more">
-                    {%- for i in range(1, (role_items|length + 6) // 7) -%}
-                        {%- for j in range(7) -%}
+                        {%- for i in range(1, (tag_items[cata_name]|length + 6) // 7 - 1) -%}
+                            {%- for j in range(7) -%}
+                                {#更多中的标签#}
+                                <a class="normal filter-tag" onClick="choosetype(this)">{{ tag_items[cata_name][i * 7 + j] }}</a>
+                            {%- endfor -%}<br>
+                        {%- endfor -%}
+                        {%- for j in range((tag_items[cata_name]|length) % 7) -%}
                             {#更多中的标签#}
-                            <a class="normal" onClick="choosetype(this)">{{ role_items[i * 7 + j] }}</a>
+                            <a class="normal filter-tag" onClick="choosetype(this)">{{ tag_items[cata_name][((tag_items[cata_name]|length + 6) // 7 - 1) * 7 + j] }}</a>
                         {%- endfor -%}<br>
-                    {%- endfor -%}
-
                     </div>
                     <hr class="hr"/>
                 </div>
@@ -110,18 +118,18 @@
         {#结果提示#}
         {% for cata_name in ['角色','情绪','情境','风格'] %}
             {% if cata_name in filter_dict %}
-            {{ cata_name }}:
+                {{ cata_name }}:
                 {% for item_name in filter_dict[cata_name] %}
                     item_name
                 {% endfor %}
             {% endif %}
         {% endfor %}
-        <div class="reminder">以下为
-            {%- if query_mode == 1 %}文本"{{ query_info['query_text'] }}"{% elif query_mode == 2 %}图片{% elif query_mode == 3 %}图片和文本{{ query_info['query_text'] }}{% endif -%}
-            的检索结果，共{{ total_length }}条：</div>
+        <div class="reminder">
+            {%- if query_mode == 1 %}文本"{{ query_info['query_text'] }}"{% elif query_mode == 2 %}图片{% elif query_mode == 3 %}图片和文本"{{ query_info['query_text'] }}"{% endif -%}
+            的检索结果共{{ total_length }}条</div>
         <div class="result_header">
             {% if page > 0 %}
-                <a><&nbsp;{{ page }}/{{ (total_length + 19) // 20 }}&nbsp;></a>
+                <a><&nbsp;{{ page }}/{{ (data|length + 19) // 20 }}&nbsp;></a>
             {% endif %}
         </div>
 
@@ -140,8 +148,8 @@
         {#页面选择按钮   下一句 初始化一个当前页码#}
         <div>
             <button {% if page > 1 %} onclick="jump_page_test({{ page - 1 }}) {% endif %}">上一页</button>
-            <span>第{{ page }}页/共{{ (total_length + 19) // 20 }}页</span>
-            <button {% if page < (total_length + 19) // 20 %} onclick="jump_page_test({{ page + 1 }}) {% endif %}">下一页</button>
+            <span>第{{ page }}页/共{{ (data|length + 19) // 20 }}页</span>
+            <button {% if page < (data|length + 19) // 20 %} onclick="jump_page_test({{ page + 1 }}) {% endif %}">下一页</button>
             <input type="text" placeholder="输入页码" id="jump-page" width="20px"/><button onclick="jump_page_test($('#jump-page').val())">GO</button>
         </div>
         {#<div class="box2"></div>#}
@@ -153,35 +161,52 @@
         </div>
         <script>
             function jump_page_test(page) {
-                let max_page = {{ (total_length + 19) // 20 }};
+                let max_page = {{ (data|length + 19) // 20 }};
                 if (page > max_page)
                     return;
-                alert("jump to " + page.toString());
-                window.location.href = '/result?page=' + page.toString() + '&get_mode=filter';
+                window.location.href = '?page=' + page.toString() + '&get_mode=filter';
             }
 
             function jump_filter_test() {
-                alert("filter");
-                let role_filter = [];
-                
                 let feature_filter = {
-                    "role": ["熊猫头", "黄脸"],
-                    "emotion": ["喜欢"]
+                    "role": [],
+                    "emotion": [],
+                    'topic': [],
+                    'style': []
                 }
-                window.location.href = '/result?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter);
+                let filter = [[],[],[],[]];
+                for (let j = 0; j < 4; j++) {
+                    let role_node = $('#filter' + String(j+1) + ' .filter-tag');
+                    role_node.each(function(){
+                        if ($(this).hasClass('active')) {
+                            filter[j].push($(this).text());
+                        }
+                    })
+                }
+                feature_filter['role'] = filter[0];
+                feature_filter['emotion'] = filter[1];
+                feature_filter['topic'] = filter[2];
+                feature_filter['style'] = filter[3];
+                for (let k in feature_filter) {
+                    if (feature_filter[k].length === 0) {
+                        delete feature_filter[k];
+                    }
+                }
+                alert('?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter))
+                window.location.href = '?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter);
                 // result?page=1&get_mode=filter&filter={'role':['熊猫头','黄脸'],'emotion':['喜欢']}
             }
 
             function jump_browse_test() {
                 alert("browse");
-                window.location.href = '/result?page=2&get_mode=browse&filter={"role":["熊猫头","黄脸"]}';
+                window.location.href = '?page=2&get_mode=browse&filter={"role":["熊猫头","黄脸"]}';
             }
         </script>
-        <div>
+        {#<div>
             <button onclick="jump_page_test()">筛选出第二页</button>
             <button onclick="jump_filter_test()">筛选熊猫头</button>
             <button onclick="jump_page_test()">浏览第一页熊猫头</button>
-        </div>
+        </div>#}
     </div>
 </center>
 

@@ -1,7 +1,7 @@
- a:link
- { 	text-decoration: none;
- 	color: #797979;
- }
+a:link
+{ 	text-decoration: none;
+	color: #797979;
+}
 
 .content{
 	width: 980px;
@@ -40,7 +40,7 @@
 	position: absolute;
 	left: 800px;
 	margin-top:13px;
-    border:none;
+	border:none;
 	cursor: pointer;
 }
 
@@ -55,20 +55,20 @@
 }
 
 input:focus{
-    outline: none;
-    border: 1px solid #409EFF;
+	outline: none;
+	border: 1px solid #409EFF;
 }
 
 .button
 {
 	width:69px;
-  	height:36px;
-  	background-color:rgba(64, 158, 255, 1);
-  	border:none;
-  	border-radius:10px;
-  	margin-left: 10px;
-  	color: white;
-  	cursor: pointer;
+	height:36px;
+	background-color:rgba(64, 158, 255, 1);
+	border:none;
+	border-radius:10px;
+	margin-left: 10px;
+	color: white;
+	cursor: pointer;
 }
 
 button:focus{
@@ -86,12 +86,12 @@ button:focus{
 }
 
 .line {
-    width: 900px;
-    height: auto;
-    font-size: 14px;
-    color: #333333;
-    padding-top: 5px;
-    padding-bottom: 10px;
+	width: 900px;
+	height: auto;
+	font-size: 14px;
+	color: #333333;
+	padding-top: 5px;
+	padding-bottom: 10px;
 }
 
 .line a
@@ -104,26 +104,35 @@ button:focus{
 {
 	background-color: #409EFF;
 	color: #fff;
-	padding: 3px 5px 3px 5px;
-	margin-left: 50px
+	/*padding: 3px 5px 3px 5px;*/
+	margin-left: 10px
+}
+
+.filter-tag {
+	padding: 0 20px;
+}
+
+.choose-all-tag {
+	margin-left: 20px;
+	padding: 0 20px;
 }
 
 .hr
 {
-   height:1px;
-   width:90%;
-   border:none;
-   border-top:1px solid rgba(121, 121, 121, 0.5);
-   margin-top:10px;
+	height:1px;
+	width:90%;
+	border:none;
+	border-top:1px solid rgba(121, 121, 121, 0.5);
+	margin-top:10px;
 }
 
 .more
 {
-    height: auto;
-    margin-top:6px;
-    margin-left:18px;
-    display:none;
-    line-height:2em;
+	height: auto;
+	margin-top:6px;
+	margin-left:18px;
+	display:none;
+	line-height:2em;
 }
 
 .reminder
@@ -182,89 +191,89 @@ button:focus{
 }
 
 .image_search{
-    width:635px;
-    height:600px;
-    /*float:center;*/
-    margin-top:30px;
+	width:635px;
+	height:600px;
+	/*float:center;*/
+	margin-top:30px;
 
 }
 
 .image_search_font{
-    font-size:18px;
-    font-family:'Arial Normal', 'Arial', sans-serif;
-    font-weight:700;
-    color:#555555;
-    text-align:left;
-    margin-left:20px;
+	font-size:18px;
+	font-family:'Arial Normal', 'Arial', sans-serif;
+	font-weight:700;
+	color:#555555;
+	text-align:left;
+	margin-left:20px;
 }
 
 .button_2
 {
-    width:100px;
-    height:30px;
-      background-color:rgba(64, 158, 255, 1);
-      border:none;
-      border-radius:10px;
-      margin-right: 30px;
-      color: white;
-      cursor: pointer;
+	width:100px;
+	height:30px;
+	background-color:rgba(64, 158, 255, 1);
+	border:none;
+	border-radius:10px;
+	margin-right: 30px;
+	color: white;
+	cursor: pointer;
 
 }
 
 button_2:focus{
-    outline: none;
+	outline: none;
 }
 
 .input_2
 {
-    width:350px;
-    height:28px;
-    border:1px solid #DBDBDB;
-    padding-left: 10px;
+	width:350px;
+	height:28px;
+	border:1px solid #DBDBDB;
+	padding-left: 10px;
 }
 
 input_2:focus{
-    outline: none;
-    border: 1px solid #409EFF;
+	outline: none;
+	border: 1px solid #409EFF;
 }
 
 .button_3{
-    width:100px;
-    height:30px;
-    background-color:rgba(64, 158, 255, 1);
-    border:none;
-    border-radius:10px;
-    margin-right:10px;
-    margin-top: 20px;
-    color: white;
-    cursor: pointer;
+	width:100px;
+	height:30px;
+	background-color:rgba(64, 158, 255, 1);
+	border:none;
+	border-radius:10px;
+	margin-right:10px;
+	margin-top: 20px;
+	color: white;
+	cursor: pointer;
 
 }
 
 button_3:focus{
-    outline: none;
+	outline: none;
 }
 
 .image_show{
-    width:465px;
-    height:360px;
-    /*float:center;*/
-    margin-top:30px;
+	width:465px;
+	height:360px;
+	/*float:center;*/
+	margin-top:30px;
 
 }
 
 .img{
-max-width:100%;height:auto;
+	max-width:100%;height:auto;
 }
 
 .close_icon
 {
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    right: 200px;
-    margin-top:-40px;
-    border:none;
-    cursor: pointer;
+	width: 18px;
+	height: 18px;
+	position: absolute;
+	right: 200px;
+	margin-top:-40px;
+	border:none;
+	cursor: pointer;
 
 }
