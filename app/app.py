@@ -3,9 +3,9 @@ import os
 import numpy
 from base64 import b64encode
 from flask import Flask, render_template, request, redirect, make_response
-from main.cnn_retrieval.cnn_utils import *
-from main.text_retrieval.retrieval import *
-from main.utils import pic_info, in_filter, CacheHandle
+# from main.cnn_retrieval.cnn_utils import *
+# from main.text_retrieval.retrieval import *
+# from main.utils import pic_info, in_filter, CacheHandle
 
 
 # 这里是单独的文字检索
@@ -237,6 +237,74 @@ def result():
         resp.set_cookie("sid", value=sid)
     return resp
 
+
+@app.route('/debug')
+def debug():
+    return render_template('search_result.html',
+                           success=True,
+                           request_type='filter',
+                           query_mode=1,
+                           query_info='开心',
+                           total_length=100,
+                           page=1,
+                           filter_dict={
+                               'role': ['熊猫头'],
+                               'emotion': ['开心']
+                           },
+                           length=3,
+                           data= [
+                               {
+                                   "name": "2280.jpg",
+                                   "src_path": "static/bqbSource/2280.jpg",
+                                   "score": 0.014422482809179831,
+                                   "role": [
+                                       "女孩"
+                                   ],
+                                   "emotion": [],
+                                   "style": [
+                                       "丧",
+                                       "可爱",
+                                       "真人"
+                                   ],
+                                   "topic": [
+                                       "自恋"
+                                   ],
+                                   "description": "我超开心的 追我的人超多 我好幸福 吃了好多零食 我好棒 一点也没长胖呢 这个世界真美好 新的一天新的快乐 我超有钱 工作真的好轻松 我从来不用考虑下一顿吃啥 喜欢的东西随便买 笑容洋溢在我脸上 我从来不会感觉到生无可恋"
+                               },
+                               {
+                                   "name": "0450.jpg",
+                                   "src_path": "static/bqbSource/0450.jpg",
+                                   "score": 0.012038112280989733,
+                                   "role": [
+                                       "猫"
+                                   ],
+                                   "emotion": [
+                                       "悲伤"
+                                   ],
+                                   "style": [
+                                       "丧"
+                                   ],
+                                   "topic": [],
+                                   "description": "我真没哭 Im fine happy 我没说 真的快乐 我很好 满脸都是开心 我哭一个月就好"
+                               },
+                               {
+                                   "name": "3609.jpg",
+                                   "src_path": "static/bqbSource/3609.jpg",
+                                   "score": 0.005985294902678634,
+                                   "role": [
+                                       "柯基",
+                                       "狗"
+                                   ],
+                                   "emotion": [
+                                       "快乐"
+                                   ],
+                                   "style": [
+                                       "可爱"
+                                   ],
+                                   "topic": [],
+                                   "description": "悠闲 开心 自得 "
+                               }
+                           ])
 
 # 下面是一个session测试
 # @app.route('/test', methods=['GET', 'POST'])
