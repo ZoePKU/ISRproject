@@ -1,6 +1,7 @@
 import jieba
 import json
 import openpyxl
+jieba.load_userdict("main/text_retrieval/my_dictionary.txt")
 
 
 def create_thes(filename):
