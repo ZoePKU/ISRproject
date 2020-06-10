@@ -101,7 +101,7 @@
                         {%- for i in range(1, (tag_items[cata_name]|length + 6) // 7 - 1) -%}
                             {%- for j in range(7) -%}
                                 {#更多中的标签#}
-                                <a class="normal filter-tag {% if filter_dict and tag_items[cata_name][i] in filter_dict[cata_name_eng[index]] %} active {% endif %}" onClick="choosetype(this)">{{ tag_items[cata_name][i * 7 + j] }}</a>
+                                <a class="normal filter-tag {% if filter_dict and tag_items[cata_name][i * 7 + j] in filter_dict[cata_name_eng[index]] %} active {% endif %}" onClick="choosetype(this)">{{ tag_items[cata_name][i * 7 + j] }}</a>
                             {%- endfor -%}<br>
                         {%- endfor -%}
                         {%- for j in range((tag_items[cata_name]|length) % 7) -%}
