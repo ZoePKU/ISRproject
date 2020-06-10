@@ -195,7 +195,7 @@
                         delete feature_filter[k];
                     }
                 }
-                alert('?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter))
+                {#alert('?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter))#}
                 window.location.href = '?page=1&get_mode=filter&filter=' + JSON.stringify(feature_filter);
                 // result?page=1&get_mode=filter&filter={'role':['熊猫头','黄脸'],'emotion':['喜欢']}
             }
