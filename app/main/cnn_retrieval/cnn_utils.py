@@ -41,31 +41,38 @@ def cnn_load_feature():
 def cnn_retrieve(query_image_path):
     query_image = load_query_image(query_image_path)
     query_feature = extract_feature_query(model=cnn_load_model(), img=query_image)
+    # print(query_feature)
+    # print(len(query_feature.tolist()))
     similarity, image_index = sort_img(query_feature, cnn_load_feature())
     #image_paths = cnn_load_image_paths()
     length = int(image_index.size()[0])
     print(image_index.size())
     sorted_paths = [(image_index[i].item() + 1, similarity[i].item()) for i in range(length) if similarity[i] > 0.85]
+    print(sorted_paths)
     return sorted_paths
 
 
 def cnn_text_retrieve(query_image_path,query):
-    query_image = load_query_image(query_image_path)
-    query_feature = extract_feature_query(model=cnn_load_model(), img=query_image)
-    similarity, image_index = sort_img(query_feature, cnn_load_feature())
+    cnn_res = cnn_retrieve(query_image_path)
     text_res = text_retrieve(query)
+
     text_res = {i[0]: i[1] for i in text_res}
-    length = int(image_index.size()[0])
+    print(text_res)
+    print(len(text_res))
+    print(len(cnn_res))
+    # length = len(text_res)
+    print(cnn_res)
     res = dict()
-    for i in range(length):
-        if image_index[i].item() in text_res:
-            res[image_index[i].item() + 1] = similarity[i] + 2 * text_res[image_index[i].item() + 1]/ 3
-        else:
-            res[image_index[i].item() + 1] = similarity[i]/ 3
-    res = sorted_dict_values(res)
+    for i in cnn_res:
+        if "{:0>4}".format(str(i[0])) in text_res:
+            res[i[0]] = (i[1] + 2 * text_res["{:0>4}".format(str(i[0]))])/ 3
+            print(i[0],res[i[0]])
+    res = sorted_dict_values(res,reverse=True)
+
     #image_paths = cnn_load_image_paths()
     #sorted_paths = {image_paths[i]:res[i] for i in res}
     print("结果",res)
+
     return res
 
 if __name__ == '__main__':

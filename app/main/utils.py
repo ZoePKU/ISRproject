@@ -2,9 +2,13 @@ import os
 import json
 from main.db import consult_db, connect_db
 from functools import cmp_to_key
+# from main.text_retrieval.utils import *
+from db_init import res_role,res_emotion,res_style,res_topic,res_description
 
 def cmp(i, j):
     return i['score'] < j['score']
+
+
 
 def pic_info(res_list):
     """
@@ -47,6 +51,7 @@ def pic_info(res_list):
     # ]
     # return res
 
+    '''
     # 连接数据库
     db_cursor = connect_db("129.211.91.153", 3306, "isrbqb", 'admin', 'abcd')
     # 查出所有的description,role,emotion,style,topic
@@ -56,6 +61,7 @@ def pic_info(res_list):
     res_style = consult_db(db_cursor, "bqb_style", "style")
     res_topic = consult_db(db_cursor, "bqb_context", "context")
     db_cursor.close()
+    '''
     # 生成匹配的Res
     res = [{'name': str("{:0>4}".format(str(i[0]))) + '.jpg',
             'src_path': 'static/bqbSource/' + str(

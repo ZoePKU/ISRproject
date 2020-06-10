@@ -116,7 +116,7 @@ def load_query_image(query_path):
     return query_image
 
 # 读模型
-def load_model(pretrained_model=None,):
+def load_model(pretrained_model=None):
     model = models.resnet50(pretrained=False)
     num_ftrs = model.fc.in_features
     add_block = []

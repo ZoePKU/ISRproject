@@ -27,7 +27,7 @@ def text_retrieve(query):
                     Res[j] = reverse_dict[i][j]
                     print(i,Res[j])
 
-    # w2v匹配
+    # word2vec匹配
     print("加载聚类json")
     # 首先读入聚类json
     cl_dict = json_input("main/text_retrieval/clustering.json")

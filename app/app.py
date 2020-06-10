@@ -6,6 +6,9 @@ from flask import Flask, render_template, request, redirect, make_response
 from main.cnn_retrieval.cnn_utils import *
 from main.text_retrieval.retrieval import *
 from main.utils import pic_info, in_filter, CacheHandle
+from db_init import *
+
+
 
 
 # 这里是单独的文字检索
@@ -28,6 +31,7 @@ def pic_retrieve():
 
 def mix_retrieve(query_text):
     tmb_images = cnn_text_retrieve('static/query/query.jpg', query_text)
+    print(tmb_images)
     res = pic_info(tmb_images)
     return res
 
@@ -254,3 +258,4 @@ def result():
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
+

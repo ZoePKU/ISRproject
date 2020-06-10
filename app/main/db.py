@@ -26,3 +26,4 @@ def consult_db(db_cursor, table, field):
     db_cursor.execute(sql_gen)
     res = db_cursor.fetchall()  # 这是bqb描述
     return res
+
