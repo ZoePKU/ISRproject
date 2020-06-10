@@ -113,8 +113,9 @@ button:focus{
 }
 
 .choose-all-tag {
-	margin-left: 20px;
-	padding: 0 20px;
+	position: absolute;
+	left: 130px;
+	padding: 0 5px;
 }
 
 .hr
@@ -276,4 +277,33 @@ button_3:focus{
 	border:none;
 	cursor: pointer;
 
+}
+
+.filter-btn, .page-btn {
+	margin-top: 20px;
+	width:80px;
+	height:35px;
+	background-color:rgba(64, 158, 255, 1);
+	border:none;
+	border-radius:5px;
+	color: white;
+	cursor: pointer;
+}
+
+.page-btn {
+	width: 60px;
+	height: 25px;
+}
+
+.page-num {
+	margin-left: 10px;
+	margin-right: 20px;
+	padding-left: 10px;
+	width: 70px;
+	height: 25px;
+}
+
+.filter-title {
+	position: absolute;
+	left: 100px;
 }

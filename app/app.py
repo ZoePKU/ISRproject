@@ -40,8 +40,9 @@ def res_from_session(handle, page=1, filter_dict={}):
     @return: 结果图片列表
     """
     tmp_res = [item_res for item_res in handle.data['last_res']['data'] if in_filter(item_res, filter_dict)]
+    total_len = len(tmp_res)
     tmp_res = tmp_res[(page - 1) * 20:page * 20]
-    return tmp_res
+    return tmp_res, total_len
 
 
 def res_browse(page=1, filter_dict={}):
@@ -154,7 +155,7 @@ def result():
                                                  success=True,
                                                  request_type='search',
                                                  query_mode=2,
-                                                 query_info={'query_pic':'query/query.jpg'},
+                                                 query_info={'query_pic': 'query/query.jpg'},
                                                  total_length=total_length,
                                                  length=len(part_res),
                                                  page=1,
@@ -193,13 +194,13 @@ def result():
             if filter_dict_str:
                 filter_dict = eval(filter_dict_str)
             page = eval(request.args.get('page'))
-            res = res_from_session(cache_handle, page, filter_dict=filter_dict)
+            res, total_len = res_from_session(cache_handle, page, filter_dict=filter_dict)
             resp = make_response(render_template('search_result.html',
                                                  success=True,
                                                  request_type='filter',
                                                  query_mode=cache_handle.data['last_res']['query_mode'],
                                                  query_info=cache_handle.data['last_res']['query_info'],
-                                                 total_length=cache_handle.data['last_res']['total_length'],
+                                                 total_length=total_len,
                                                  page=page,
                                                  filter_dict=filter_dict,
                                                  length=len(res),
@@ -238,18 +239,74 @@ def result():
     return resp
 
 
-# 下面是一个session测试
-# @app.route('/test', methods=['GET', 'POST'])
-# def rest():
-#     form = request.form
-#     if request.method == 'POST':
-#         session['name'] = form.get('name')
-#         return 'name is ' + session['name'] + '<form method="post" action="/test"><input type="text" name="name"/><button type="submit">提交</button></form>'
-#     else:
-#         if 'name' in session:
-#             return 'name is ' + session['name'] + '<form method="post" action="/test"><input type="text" name="name"/><button type="submit">提交</button></form>'
-#         else:
-#             return 'name not know ' + '<form method="post" action="/test"><input type="text" name="name"/><button type="submit">提交</button></form>'
+# 用于查看前端
+@app.route('/debug')
+def debug():
+    return render_template('search_result.html',
+                           success=True,
+                           request_type='filter',
+                           query_mode=1,
+                           query_info='开心',
+                           total_length=100,
+                           page=1,
+                           filter_dict={
+                               'role': ['熊猫头'],
+                               'emotion': ['开心']
+                           },
+                           length=3,
+                           data=[
+                               {
+                                   "name": "2280.jpg",
+                                   "src_path": "static/bqbSource/2280.jpg",
+                                   "score": 0.014422482809179831,
+                                   "role": [
+                                       "女孩"
+                                   ],
+                                   "emotion": [],
+                                   "style": [
+                                       "丧",
+                                       "可爱",
+                                       "真人"
+                                   ],
+                                   "topic": [
+                                       "自恋"
+                                   ],
+                                   "description": "我超开心的 追我的人超多 我好幸福 吃了好多零食 我好棒 一点也没长胖呢 这个世界真美好 新的一天新的快乐 我超有钱 工作真的好轻松 我从来不用考虑下一顿吃啥 喜欢的东西随便买 笑容洋溢在我脸上 我从来不会感觉到生无可恋"
+                               },
+                               {
+                                   "name": "0450.jpg",
+                                   "src_path": "static/bqbSource/0450.jpg",
+                                   "score": 0.012038112280989733,
+                                   "role": [
+                                       "猫"
+                                   ],
+                                   "emotion": [
+                                       "悲伤"
+                                   ],
+                                   "style": [
+                                       "丧"
+                                   ],
+                                   "topic": [],
+                                   "description": "我真没哭 Im fine happy 我没说 真的快乐 我很好 满脸都是开心 我哭一个月就好"
+                               },
+                               {
+                                   "name": "3609.jpg",
+                                   "src_path": "static/bqbSource/3609.jpg",
+                                   "score": 0.005985294902678634,
+                                   "role": [
+                                       "柯基",
+                                       "狗"
+                                   ],
+                                   "emotion": [
+                                       "快乐"
+                                   ],
+                                   "style": [
+                                       "可爱"
+                                   ],
+                                   "topic": [],
+                                   "description": "悠闲 开心 自得 "
+                               }
+                           ])
 
 
 if __name__ == '__main__':
