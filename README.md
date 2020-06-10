@@ -3,6 +3,147 @@
 信息存储与检索课程 检索项目实验
 
 
+
+## 部署说明
+
+```
+# 命令行操作，命令为美元符$后面的语句
+# macOS同学一定要注意python2和python3的问题，一般来说所有pip都应该改成pip3
+# 但是进入virtualenv虚拟环境后应当一律使用pip
+
+# 首先从GitHub仓库克隆本项目
+$ git clone https://github.com/ZoePKU/ISRproject.git
+# 若GitHub太慢，可以使用国内源（码云）https://gitee.com/n0ctiluca/ISRproject.git，但无法保证代码最新。
+
+# 进入项目
+$ cd ISRproject
+
+# 安装 virtualenv 库（虚拟环境），如果你没有安装过的话
+$ pip install virtualenv
+
+# 建立虚拟环境
+$ virtualenv venv
+
+# 激活虚拟环境 macOS/Linux
+$ source venv/bin/activate
+# 激活虚拟环境 windows
+$ venv\Scripts\activate
+
+# 激活成功后你的命令行会变成
+(venv) $ ....
+
+# =============下面安装依赖库==============
+
+# 安装所有依赖库（有虚拟环境后macOS同学可以不要用pip3了，用pip）
+(venv) $ pip install -r requirements.txt
+
+# requirements里面不包括torch，需要单独安装(注意仍然要在虚拟环境下安装)
+# windows
+(venv) $ pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+# macOS/Linux
+(venv) $ pip install torch torchvision
+# PyTorch 安装时间可能比较长，需耐心等待。
+
+# =============依赖库安装完毕==============
+
+# =============下面配置代码库中被ignore的文件==============
+# 从 https://drive.google.com/open?id=1TG_Fq_UryffsmV045u4MJGaWB-MJqNgI下载word2vec.bin文件
+# 放入app/main/text_retrieval/ 文件夹
+# 从 https://lanzous.com/icpnpsd下载net_best.pth文件
+# 放入app/main/cnn_retrieval/models/ 文件夹
+# 从 https://lanzous.com/icpnpsd下载enc.npz文件
+# 放入app/main/cnn_retrieval/models/ 文件夹
+
+# 创建app/static/query/ 文件夹
+# 创建app/cache/ 文件夹
+# =============ignore文件配置完毕==============
+
+
+# 下面运行项目，如果在本地调试，那么：
+# 先进入app路径[必须这么做，否则路径出错]
+(venv) $ cd app
+# 运行 app.py 启动服务器
+(venv) $ python app.py
+# 浏览器输入 http://localhost:5000 就可以访问项目了（如果报了端口占用的错可以把端口当前进程杀掉）
+# 务必使用Ctrl+C来停止运行而不是直接关闭命令行！
+
+# 如果在服务器使用uwsgi部署，那么：
+# 配置uwsgi.ini文件
+# 将home改为venv文件夹在机器上的绝对路径
+# 将chdir改为app文件夹在机器上的绝对路径
+# 运行项目
+(venv) $ uwsgi --ini uwsgi.ini
+# 浏览器输入 http://<服务器公网IP>:5000 就可以访问项目了（注意安全组要放行5000端口）
+# 停止项目
+(venv) $ uwsgi --stop uwsgi.pid
+# 查看uwsgi日志
+(venv) $ cat logs/uwsgi.log
+```
+
+
+
+
+
+## 代码结构
+
+```python
+ISRproject
+├── README.md
+├── app                              # 主程序文件夹
+│   ├── __init__.py
+│   ├── app.py                       # Flask应用启动文件，包含视图函数
+│   ├── main                         # 主程序文件夹
+│   │   ├── __init__.py
+│   │   ├── cnn_retrieval            # 图像检索功能文件夹
+│   │   │   ├── __init__.py
+│   │   │   ├── cnn_retrieval.py     # 图像检索核心函数
+│   │   │   ├── cnn_utils.py         # 图像检索自制接口
+│   │   │   └── models               # 图像检索模型
+│   │   │       ├── enc.npz          # 针对4000张图片预提取的特征
+│   │   │       └── net_best.pth     # CNN训练结果模型
+│   │   ├── text_retrieval           # 文本检索功能文件夹
+│   │   │   ├── __init__.py
+│   │   │   ├── bqb_description.xlsx # 分词结果
+│   │   │   ├── retrieval.py         # 文本检索核心函数
+│   │   │   ├── reverse_index.json   # 倒排档
+│   │   │   ├── reverse_index.py     # 用于生成倒排档
+│   │   │   ├── clustering.py        # 用于生成聚类
+│   │   │   ├── clustering.json      # 聚类结果
+│   │   │   ├── stop_words.txt       # 停用词表
+│   │   │   ├── thesaurus.xlsx       # 主题词表
+│   │   │   ├── utils.py             # 文本检索自制接口
+│   │   │   └── word2vec.bin         # word2vector模型
+│   │   ├── db.py                    # 数据库连接接口
+│   │   └── utils.py                 # 通用方法接口
+│   ├── static                       # 静态资源文件夹
+│   │   ├── bqbSource                # 存放4000张表情包库
+│   │   ├── cnn_test                 # 为提高效率创建的图像检索测试文件
+│   │   ├── index                    # 主页静态资源
+│   │   │   ├── images
+│   │   │   ├── index.css
+│   │   │   └── js
+│   │   ├── query                    # 暂时存放用户上传的检索图片
+│   │   └── search_result            # 结果页面静态资源
+│   │       ├── css
+│   │       ├── images
+│   │       └── js
+│   ├── templates                    # Jinja模板文件夹
+│   │   ├── index.html               # 主页模板
+│   │   └── search_result.html       # 结果页面模板
+├── reference                        # 初期资源参考
+│   ├── image_clustering             # 表情包聚类效果参考
+│   ├── image_process                # 图片识别、清洗工具
+├── requirements.txt                 # python 第三方包依赖清单
+└── venv                             # python virtualenv 虚拟环境
+```
+
+
+
+
+
+
+
+
 ## 最后一次完善 2020-0604
 
 #### 上次工作总结
@@ -83,34 +224,36 @@ session['last_res'] = {
 建立虚拟环境（不用虚拟环境很容易导致包出错）
 
 ```bash
-# 以下是命令行操作，命令为美元符$后面的语句
-# 井号是注释，macOS同学一定要注意python2和python3的问题，一般来说所有pip都应该改成pip3，但是进入virtualenv虚拟环境后应当一律使用pip
+# 命令行操作，命令为美元符$后面的语句
+# macOS同学一定要注意python2和python3的问题，一般来说所有pip都应该改成pip3
+# 但是进入virtualenv虚拟环境后应当一律使用pip
 
 # 安装 virtualenv 库（虚拟环境），如果你没有安装过的话
 $ pip install virtualenv
 
-# 切换到我们的项目地址
-$ cd xxxxxx/ISRproject
+# 切换到项目地址
+$ cd <yourProjectPath>/ISRproject
 
 # 建立虚拟环境
 $ virtualenv venv
 
-# 激活虚拟环境 macOS
+# 激活虚拟环境 macOS/Linux
 $ source venv/bin/activate
 # 激活虚拟环境 windows
 $ venv\Scripts\activate
 
 # 激活成功后你的命令行会变成
-(venv) $ xxxxx
+(venv) $ ....
 
 # =============下面安装依赖库==============
 
 # 安装所有依赖库（有虚拟环境后macOS同学可以不要用pip3了，用pip）
 (venv) $ pip install -r requirements.txt
+
 # requirements里面不包括torch，需要单独安装(注意仍然要在虚拟环境下安装)
-# windows系统
+# windows
 (venv) $ pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
-# macOS系统
+# macOS/Linux
 (venv) $ pip install torch torchvision
 # PyTorch 安装时间可能比较长，需耐心等待。
 
