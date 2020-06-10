@@ -3,7 +3,9 @@ from main.text_retrieval.utils import *
 import math
 from main.utils import *
 
-def description_parse(dict,thes_words,thes_dict, stop_words):
+
+# 对图片描述分词
+def description_parse(dict,thes_words, thes_dict, stop_words):
     cut_dict = {}
     for id in dict:
         if dict[id]:
@@ -13,6 +15,7 @@ def description_parse(dict,thes_words,thes_dict, stop_words):
     return cut_dict
 
 
+# 计算idf
 def cal_idf(cut_dict):
     # print(cut_dict)
     # id:切词list
@@ -32,6 +35,7 @@ def cal_idf(cut_dict):
     return idf
 
 
+# 倒排
 def revert(cut_dict):
     idf = cal_idf(cut_dict)
     reverse_index = {}

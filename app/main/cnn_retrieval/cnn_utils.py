@@ -38,6 +38,7 @@ def cnn_load_feature():
     return torch.tensor(feat['enc'])
 
 
+# 读取检索图 -> 提取卷积特征 -> 计算相似性 -> 排序输出
 def cnn_retrieve(query_image_path):
     query_image = load_query_image(query_image_path)
     query_feature = extract_feature_query(model=cnn_load_model(), img=query_image)
@@ -52,6 +53,7 @@ def cnn_retrieve(query_image_path):
     return sorted_paths
 
 
+# 图文分别检索排序 -> 加权筛选 -> 排序输出
 def cnn_text_retrieve(query_image_path,query):
     cnn_res = cnn_retrieve(query_image_path)
     text_res = text_retrieve(query)

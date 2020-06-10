@@ -10,6 +10,7 @@ model = models.KeyedVectors.load_word2vec_format('main/text_retrieval/word2vec.b
 print("w2v模型加载完成")
 
 
+# 文本匹配函数 读入倒排档->word2vec计算相关词->匹配->返回结果
 def text_retrieve(query):
     # 得到分词的列表
     cut_list = parse(query, thes_words, thes_dict, stop_words)
