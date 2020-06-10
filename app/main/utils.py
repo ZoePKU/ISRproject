@@ -53,7 +53,8 @@ def pic_info(res_list):
 
     '''
     # 连接数据库
-    db_cursor = connect_db("129.211.91.153", 3306, "isrbqb", 'admin', 'abcd')
+    # db_cursor = connect_db("129.211.91.153", 3306, "isrbqb", 'admin', 'abcd')
+    db_cursor = connect_db("101.37.35.52", 3306, "isrbqb", 'admin', 'abcd')
     # 查出所有的description,role,emotion,style,topic
     res_description = consult_db(db_cursor, "bqb_description", "geng")
     res_role = consult_db(db_cursor, "bqb_role", "role")
