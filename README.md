@@ -49,10 +49,8 @@ $ venv\Scripts\activate
 # =============下面配置代码库中被ignore的文件==============
 # 从 https://drive.google.com/open?id=1TG_Fq_UryffsmV045u4MJGaWB-MJqNgI下载word2vec.bin文件
 # 放入app/main/text_retrieval/ 文件夹
-# 从 https://lanzous.com/icpnpsd下载net_best.pth文件
-# 放入app/main/cnn_retrieval/models/ 文件夹
-# 从 https://lanzous.com/icpnpsd下载enc.npz文件
-# 放入app/main/cnn_retrieval/models/ 文件夹
+# 从 https://wwa.lanzous.com/b00nnq6ji (密码:6mgr) 下载net_best.pth文件和enc.npz文件并解压
+# 均放入app/main/cnn_retrieval/models/ 文件夹
 
 # 创建app/static/query/ 文件夹
 # 创建app/cache/ 文件夹
@@ -86,7 +84,7 @@ $ venv\Scripts\activate
 
 ## 代码结构
 
-```python
+```
 ISRproject
 ├── README.md
 ├── app                              # 主程序文件夹
@@ -98,6 +96,8 @@ ISRproject
 │   │   │   ├── __init__.py
 │   │   │   ├── cnn_retrieval.py     # 图像检索核心函数
 │   │   │   ├── cnn_utils.py         # 图像检索自制接口
+│   │   │   ├── identify.py          # 图像去重处理
+│   │   │   ├── preprocessing.py     # 图像去重处理主函数
 │   │   │   └── models               # 图像检索模型
 │   │   │       ├── enc.npz          # 针对4000张图片预提取的特征
 │   │   │       └── net_best.pth     # CNN训练结果模型
@@ -110,6 +110,7 @@ ISRproject
 │   │   │   ├── clustering.py        # 用于生成聚类
 │   │   │   ├── clustering.json      # 聚类结果
 │   │   │   ├── stop_words.txt       # 停用词表
+│   │   │   ├── parse_dictionary.txt # 角色等标引词词表
 │   │   │   ├── thesaurus.xlsx       # 主题词表
 │   │   │   ├── utils.py             # 文本检索自制接口
 │   │   │   └── word2vec.bin         # word2vector模型
@@ -136,11 +137,6 @@ ISRproject
 ├── requirements.txt                 # python 第三方包依赖清单
 └── venv                             # python virtualenv 虚拟环境
 ```
-
-
-
-
-
 
 
 
