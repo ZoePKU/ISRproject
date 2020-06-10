@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*
 import os
-import numpy
 from base64 import b64encode
 from flask import Flask, render_template, request, redirect, make_response
 from main.cnn_retrieval.cnn_utils import *
 from main.text_retrieval.retrieval import *
 from main.utils import pic_info, in_filter, CacheHandle
-from db_init import *
-
-
 
 
 # 这里是单独的文字检索
@@ -39,26 +35,12 @@ def mix_retrieve(query_text):
 def res_from_session(handle, page=1, filter_dict={}):
     """
     从session读取上一次检索的结果，并使用过滤器进行筛选
+    @param handle: 缓存管理类
     @param page: 查看第几页，每页20个
     @param filter_dict: 过滤器字典
     @return: 结果图片列表
     """
     tmp_res = [item_res for item_res in handle.data['last_res']['data'] if in_filter(item_res, filter_dict)]
-    total_len = len(tmp_res)
-    tmp_res = tmp_res[(page - 1) * 20:page * 20]
-    return tmp_res, total_len
-
-
-def res_browse(page=1, filter_dict={}):
-    """
-    不检索情况下浏览
-    @param page: 查看的页数
-    @param filter_dict: 筛选器的字典
-    @return:
-    """
-    all_pic_no_list = list(range(4000))
-    all_pic_list = pic_info(all_pic_no_list)
-    tmp_res = [item_res for item_res in all_pic_list if in_filter(item_res, filter_dict)]
     total_len = len(tmp_res)
     tmp_res = tmp_res[(page - 1) * 20:page * 20]
     return tmp_res, total_len
@@ -126,7 +108,7 @@ def result():
             part_res = page_filter(res)
             cache_handle.data['last_res'] = {}
             cache_handle.data['last_res']['query_mode'] = 3
-            cache_handle.data['last_res']['query_info'] = {'query_text':query_text,'query_pic':'query/query.jpg'}
+            cache_handle.data['last_res']['query_info'] = {'query_text': query_text, 'query_pic': 'query/query.jpg'}
             cache_handle.data['last_res']['total_length'] = total_length
             cache_handle.data['last_res']['data'] = res
             cache_handle.save_data()
@@ -134,7 +116,7 @@ def result():
                                                  success=True,
                                                  request_type='search',
                                                  query_mode=3,
-                                                 query_info={'query_text':query_text,'query_pic':'query/query.jpg'},
+                                                 query_info={'query_text': query_text, 'query_pic': 'query/query.jpg'},
                                                  total_length=total_length,
                                                  length=len(part_res),
                                                  page=1,
@@ -151,7 +133,7 @@ def result():
             part_res = page_filter(res)
             cache_handle.data['last_res'] = {}
             cache_handle.data['last_res']['query_mode'] = 2
-            cache_handle.data['last_res']['query_info'] = {'query_pic':'query/query.jpg'}
+            cache_handle.data['last_res']['query_info'] = {'query_pic': 'query/query.jpg'}
             cache_handle.data['last_res']['total_length'] = total_length
             cache_handle.data['last_res']['data'] = res
             cache_handle.save_data()
@@ -175,7 +157,7 @@ def result():
             part_res = page_filter(res)
             cache_handle.data['last_res'] = {}
             cache_handle.data['last_res']['query_mode'] = 1
-            cache_handle.data['last_res']['query_info'] = {'query_text':query_text}
+            cache_handle.data['last_res']['query_info'] = {'query_text': query_text}
             cache_handle.data['last_res']['total_length'] = total_length
             cache_handle.data['last_res']['data'] = res
             cache_handle.save_data()
@@ -183,7 +165,7 @@ def result():
                                                  success=True,
                                                  request_type='search',
                                                  query_mode=1,
-                                                 query_info={'query_text':query_text},
+                                                 query_info={'query_text': query_text},
                                                  total_length=total_length,
                                                  page=1,
                                                  length=len(part_res),
@@ -214,19 +196,26 @@ def result():
             filter_dict = eval(request.args.get('filter'))
             page = eval(request.args.get('page'))
             print("浏览")
-            cache_handle.data['last_status'] = 0
+            all_pic_no_list = [(i, 1) for i in range(1, 4001)]
+            all_pic_list = pic_info(all_pic_no_list)
             cache_handle.data['last_res'] = {}
-            res, total_len = res_browse(page, filter_dict=filter_dict)
+            cache_handle.data['last_res'] = {
+                'query_mode': -1,
+                'data': all_pic_list,
+                'total_length': 4000,
+                'query_info': {}
+            }
+            cache_handle.save_data()
             resp = make_response(render_template('search_result.html',
                                                  success=True,
                                                  request_type='browse',
                                                  query_mode=-1,
                                                  query_info='',
-                                                 total_length=total_len,
-                                                 length=len(res),
+                                                 total_length=len(all_pic_list),
+                                                 length=20,
                                                  page=page,
                                                  filter_dict=filter_dict,
-                                                 data=res))
+                                                 data=all_pic_list[:20]))
         else:
             print("啥都不干")
             resp = make_response(render_template('search_result.html',
@@ -315,4 +304,3 @@ def debug():
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
-

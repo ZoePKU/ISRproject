@@ -128,8 +128,8 @@
             {% endif %}
         {% endfor %}
         <div class="reminder">
-            {%- if query_mode == 1 %}文本"{{ query_info['query_text'] }}"{% elif query_mode == 2 %}图片{% elif query_mode == 3 %}图片和文本"{{ query_info['query_text'] }}"{% endif -%}
-            的检索结果共{{ total_length }}条</div>
+            {%- if query_mode == 1 %}文本"{{ query_info['query_text'] }}"的{% elif query_mode == 2 %}图片的{% elif query_mode == 3 %}图片和文本"{{ query_info['query_text'] }}"的{% endif -%}
+            检索结果共{{ total_length }}条</div>
         <div class="result_header">
             {% if page > 0 %}
                 <a><&nbsp;{{ page }}/{{ (total_length + 19) // 20 }}&nbsp;></a>
