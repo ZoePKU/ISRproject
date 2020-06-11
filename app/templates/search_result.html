@@ -167,7 +167,31 @@
                 let max_page = {{ (total_length + 19) // 20 }};
                 if (page > max_page)
                     return;
-                window.location.href = '?page=' + page.toString() + '&get_mode=filter';
+                let feature_filter = {
+                    "role": [],
+                    "emotion": [],
+                    'topic': [],
+                    'style': []
+                }
+                let filter = [[],[],[],[]];
+                for (let j = 0; j < 4; j++) {
+                    let role_node = $('#filter' + String(j+1) + ' .filter-tag');
+                    role_node.each(function(){
+                        if ($(this).hasClass('active')) {
+                            filter[j].push($(this).text());
+                        }
+                    })
+                }
+                feature_filter['role'] = filter[0];
+                feature_filter['emotion'] = filter[1];
+                feature_filter['topic'] = filter[2];
+                feature_filter['style'] = filter[3];
+                for (let k in feature_filter) {
+                    if (feature_filter[k].length === 0) {
+                        delete feature_filter[k];
+                    }
+                }
+                window.location.href = '?page=' + page.toString() + '&get_mode=filter&filter=' + JSON.stringify(feature_filter);
             }
 
             function jump_filter_test() {
