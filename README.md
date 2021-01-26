@@ -47,7 +47,7 @@ $ venv\Scripts\activate
 # =============依赖库安装完毕==============
 
 # =============下面配置代码库中被ignore的文件==============
-# 从 https://drive.google.com/open?id=1TG_Fq_UryffsmV045u4MJGaWB-MJqNgI下载word2vec.bin文件
+# 从【https://pan.baidu.com/s/1cng9kkwfmDtn_wgfc2Eo5w 密码: a7ma】下载word2vec.bin文件
 # 放入app/main/text_retrieval/ 文件夹
 # 从 https://wwa.lanzous.com/b00nnq6ji (密码:6mgr) 下载net_best.pth文件和enc.npz文件并解压
 # 均放入app/main/cnn_retrieval/models/ 文件夹
